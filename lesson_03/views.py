@@ -12,7 +12,7 @@ class Index:
 class About:
     # {'method': 'GET', 'request_params': {'id': '1', 'category': '10'}}
     def __call__(self, request):
-        return "200 OK", "about"
+        return "200 OK", render("about.html")
 
 
 def contacts_view(request, *args, **kwargs):

@@ -14,7 +14,9 @@ env = Environment(
 )
 
 
-def render(template_name, context, **kwargs):
+def render(template_name, context={}, **kwargs):
+    # получаем шаблон
     template = env.get_template(template_name)
+
     # рендерим шаблон с параметрами
     return template.render(context).encode("utf-8")
