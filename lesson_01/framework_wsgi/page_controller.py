@@ -1,4 +1,7 @@
-def index_view(request):
+from .template_view import render_from_line
+
+
+def index_view(environ):
     status = "200 OK"
     headers = [
         (
@@ -7,11 +10,14 @@ def index_view(request):
         ),
     ]
 
-    body = "Hello, world! With page controller.".encode("utf-8")
+    context = {"path": environ["PATH_INFO"]}
+    template = "This is index page. With template view on path: {{path}}"
+    body = render_from_line(template, context).encode("utf-8")
+
     return status, headers, body
 
 
-def not_found_view(request):
+def not_found_view(environ):
     status = "404 NOT FOUND"
     headers = [
         (

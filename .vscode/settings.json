@@ -1,10 +1,9 @@
 {
   // 📁 PYTHONPATH
   "terminal.integrated.env.osx": {
-    "PYTHONPATH": "${workspaceFolder}/lesson_01"
+    "PYTHONPATH": "/Users/macbook/Code/Projects/architecture_patterns - project/.venv/lib/python3.11/site-packages:${workspaceFolder}/lesson_01"
   },
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
-  },
-  "python.formatting.provider": "none"
+  }
 }
