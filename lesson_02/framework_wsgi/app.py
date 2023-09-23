@@ -1,12 +1,20 @@
-from . import page_controller
+from typing import Iterable
+
 from . import front_controller
+from .http import Request, Response
+from .middleware import middleware
 
 
-def application(environ: dict, start_response):
-    view = front_controller.get_page(environ["PATH_INFO"])
-    status, headers, body = view(environ)
+class Application:
+    def __init__(self) -> None:
+        self.middleware = middleware
 
-    start_response(status, headers)  # отправляем заголовки клиенту
-    return [
-        body
-    ]  # отправляем итерируемый объект (т.к. тело может быть слишком большим)
+    def __call__(self, environ: dict, start_response) -> Iterable:
+        request = Request(environ)
+        view = front_controller.get_page(request.path)
+        status, headers, body = view(request)
+        response = Response(status, headers, body)
+
+        # отправляем заголовки, статус и возвращаем итерируемый объект (т.к. тело может быть слишком большим)
+        start_response(response.status, response.headers)
+        return [response.body]
