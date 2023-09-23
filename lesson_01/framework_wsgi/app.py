@@ -1,8 +1,10 @@
 from . import page_controller
+from . import front_controller
 
 
 def application(environ: dict, start_response):
-    status, headers, body = page_controller.index_view(environ)
+    view = front_controller.get_page(environ["PATH_INFO"])
+    status, headers, body = view(environ)
 
     start_response(status, headers)  # отправляем заголовки клиенту
     return [
