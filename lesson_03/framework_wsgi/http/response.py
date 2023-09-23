@@ -3,7 +3,7 @@ from framework_wsgi.middleware import middleware
 
 
 HEADERS: Iterable = [
-    ("Content-Type", "text/html"),
+    ("Content-Type", "text/html; charset=UTF-8"),
     # ("Content-Type", "application/json"),
 ]
 
