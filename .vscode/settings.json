@@ -1,0 +1,6 @@
+{
+  // 📁 PYTHONPATH
+  "terminal.integrated.env.osx": {
+    "PYTHONPATH": "${workspaceFolder}/lesson_01"
+  }
+}
