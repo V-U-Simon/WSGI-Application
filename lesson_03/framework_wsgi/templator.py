@@ -1,34 +1,20 @@
-from os.path import join
-from jinja2 import Template
+from pathlib import Path
+
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+
+path = Path("lesson_03/templates")
+loader = FileSystemLoader(path)
+
+env = Environment(
+    loader=loader,
+    autoescape=select_autoescape(
+        "html",
+    ),
+    extensions=[],
+)
 
 
-# Pattern: template_view
-
-
-def render_from_line(template_line: str, context: dict) -> str:
-    """Сформировать шаблон из текста"""
-    template = Template(template_line)  # 📝 ✅ создаем  шаблон
-    return template.render(**context)  # 📝 👀 рендерим шаблон (используя контекст)
-
-
-def render(template_name, context: dict = {}, **kwargs):
-    folder = "lesson_03/templates"
-    file_path = join(folder, template_name)
-    # print(file_path)
-
-    # Открываем шаблон по имени
-    with open(file_path, encoding="utf-8") as f:
-        # Читаем
-        template = Template(f.read())
-
+def render(template_name, context, **kwargs):
+    template = env.get_template(template_name)
     # рендерим шаблон с параметрами
-    context.update(**kwargs)
-    return template.render(**context).encode("utf-8")
-
-
-if __name__ == "__main__":
-    body = render(
-        "index.html",
-        context={"path": "test"},
-    )
-    print(body)
+    return template.render(context).encode("utf-8")
