@@ -1,11 +1,12 @@
-from framework_wsgi.template_view import render_from_line, render
+from framework_wsgi.templator import render_from_line, render
 
 
+# Pattern: page_controllers
 def index_view(request):
     return "200 OK", render("index.html", context={"path": request.path})
 
 
-def contact_form_view(request, *args, **kwargs):
+def contacts_view(request, *args, **kwargs):
     if request.method == "POST":
         email = request.POST.get("email")
         subject = request.POST.get("subject")

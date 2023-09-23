@@ -1,11 +1,13 @@
 from typing import Callable
 
-from .page_controller import index_view, contact_form_view
+from views import index_view, contacts_view
+
+# Pattern: front_controllers
 
 urls = {
     "/": index_view,
     "/index/": index_view,
-    "/contact/": contact_form_view,
+    "/contact/": contacts_view,
 }
 
 

@@ -1,9 +1,9 @@
 import os
 from wsgiref.simple_server import make_server
 from framework_wsgi.app import Application
+import urls
 
-
-application = Application()
+application = Application(urls=urls)
 
 
 if __name__ == "__main__":

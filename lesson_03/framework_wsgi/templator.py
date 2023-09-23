@@ -2,6 +2,9 @@ from os.path import join
 from jinja2 import Template
 
 
+# Pattern: template_view
+
+
 def render_from_line(template_line: str, context: dict) -> str:
     """Сформировать шаблон из текста"""
     template = Template(template_line)  # 📝 ✅ создаем  шаблон
@@ -9,7 +12,7 @@ def render_from_line(template_line: str, context: dict) -> str:
 
 
 def render(template_name, context: dict = {}, **kwargs):
-    folder = "lesson_02/templates"
+    folder = "lesson_03/templates"
     file_path = join(folder, template_name)
     # print(file_path)
 

@@ -1,17 +1,17 @@
 from typing import Iterable
 
-from . import front_controller
 from .http import Request, Response
 from .middleware import middleware
 
 
 class Application:
-    def __init__(self) -> None:
+    def __init__(self, urls) -> None:
         self.middleware = middleware
+        self.urls = urls
 
     def __call__(self, environ: dict, start_response) -> Iterable:
         request = Request(environ)
-        view = front_controller.get_page(request.path)
+        view = self.urls.get_page(request.path)
         status, body = view(request)
         response = Response(status, body)
 
