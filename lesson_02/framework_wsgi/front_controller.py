@@ -1,10 +1,11 @@
 from typing import Callable
 
-from .page_controller import index_view, not_found_view
+from .page_controller import index_view, contact_form_view
 
 urls = {
     "/": index_view,
     "/index/": index_view,
+    "/contact/": contact_form_view,
 }
 
 
