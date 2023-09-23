@@ -1,13 +1,14 @@
 from typing import Callable
 
-from views import index_view, contacts_view
+import views
 
 # Pattern: front_controllers
 
-urls = {
-    "/": index_view,
-    "/index/": index_view,
-    "/contact/": contacts_view,
+routes = {
+    "/": views.Index(),
+    "/index/": views.Index(),
+    "/about/": views.About(),
+    "/contact/": views.contacts_view,
 }
 
 
@@ -18,4 +19,4 @@ def page_not_found(request):
 
 
 def get_page(path) -> Callable:
-    return urls.get(path, page_not_found)
+    return routes.get(path, page_not_found)

@@ -1,9 +1,18 @@
-from framework_wsgi.templator import render_from_line, render
-
-
 # Pattern: page_controllers
-def index_view(request):
-    return "200 OK", render("index.html", context={"path": request.path})
+
+from framework_wsgi.templator import render
+
+
+class Index:
+    def __call__(self, request):
+        context = {"date": request.GET.get("date", None)}
+        return "200 OK", render("index.html", context=context)
+
+
+class About:
+    # {'method': 'GET', 'request_params': {'id': '1', 'category': '10'}}
+    def __call__(self, request):
+        return "200 OK", "about"
 
 
 def contacts_view(request, *args, **kwargs):
