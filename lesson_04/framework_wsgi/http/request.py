@@ -5,22 +5,19 @@ import cgi
 
 class Request:
     def __init__(self, environ: dict):
-        print(f"Processing request")
         self.environ = environ
-        self.path = environ["PATH_INFO"]
+        self.url = self._prepare_url(environ["PATH_INFO"])
         self.method = environ["REQUEST_METHOD"].upper()
+
         self.params = {}
         self.data = {}
 
         for func in middleware.pre_process_funcs:
             func(self)
 
-
-@middleware.pre_process
-def check_path_slash(request: Request):
-    # добавление закрывающего слеша
-    if not request.path.endswith("/"):
-        request.path = request.path + "/"
+    def _prepare_url(url: str):
+        # добавление закрывающего слеша
+        return url if url.endswith("/") else url + "/"
 
 
 @middleware.pre_process
