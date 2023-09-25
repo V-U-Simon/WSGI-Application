@@ -1,8 +1,9 @@
 from pathlib import Path
-
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-path = Path("lesson_03/templates")
+from framework_wsgi.http.response import Response
+
+path = Path("")
 loader = FileSystemLoader(path)
 
 env = Environment(
@@ -14,9 +15,10 @@ env = Environment(
 )
 
 
-def render(template_name, context={}, **kwargs):
+def render(request, template_name, context={}, **kwargs) -> Response:
     # получаем шаблон
     template = env.get_template(template_name)
-
     # рендерим шаблон с параметрами
-    return template.render(context).encode("utf-8")
+    str_body = template.render(context)
+
+    Response(request=request, body=str_body)

@@ -4,7 +4,11 @@ from .request import Request
 
 class Response:
     def __init__(
-        self, request: Request, status: int = 200, body: str = "", headers: dict = {}
+        self,
+        request: Request,
+        status: str = "200 OK",
+        body: str = "",
+        headers: dict = {},
     ):
         self.request = request
         self.status = status
