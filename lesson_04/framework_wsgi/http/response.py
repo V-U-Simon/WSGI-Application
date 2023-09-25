@@ -1,19 +1,19 @@
-from typing import Any, Iterable
-from framework_wsgi.middleware import middleware
-
-
-HEADERS: Iterable = [
-    ("Content-Type", "text/html; charset=UTF-8"),
-    # ("Content-Type", "application/json"),
-]
+from typing import Any, Iterable, Type
+from .request import Request
 
 
 class Response:
-    def __init__(self, status: str, body: Any, headers: Iterable = HEADERS):
-        print(f"Processing response")
-        self.body = body
+    def __init__(
+        self, request: Request, status: int = 200, body: str = "", headers: dict = {}
+    ):
+        self.request = request
         self.status = status
-        self.headers = headers = headers
 
-        for func in middleware.post_process_funcs:
-            func(self)
+        self.headers = headers
+        self.headers_wsgi = {}
+
+        self.body = body.encode("utf-8")
+
+    def headers_to_wsgi(self, base_headers: dict = {}):
+        base_headers.update(self.headers)
+        self.headers_wsgi = [(key, value) for key, value in base_headers.items()]
