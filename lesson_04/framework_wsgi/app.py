@@ -1,20 +1,67 @@
-from typing import Iterable
+import re
+from typing import Callable, Iterable, Type
 
-from .http import Request, Response
-from .middleware import middleware
+from framework_wsgi.urls import Url
+from framework_wsgi.views import View, page_not_found
+from framework_wsgi.http import Request, Response
+from framework_wsgi.middleware import BaseMiddleWare
+from framework_wsgi.exceptions import MethodNotAllowed, PageNotFound
 
 
 class Application:
-    def __init__(self, urls) -> None:
-        self.middleware = middleware
+    def __init__(
+        self,
+        urls: list[Type[Url]],
+        middlewares: list[Type[BaseMiddleWare],],
+        settings: dict,
+    ) -> None:
         self.urls = urls
+        self.middlewares = middlewares
+        self.settings = settings
 
     def __call__(self, environ: dict, start_response) -> Iterable:
-        request = Request(environ)
-        view = self.urls.get_page(request.path)
-        status, body = view(request)
-        response = Response(status, body)
+        request = self._get_request(environ)
+        response = self._get_response(request)
 
         # отправляем заголовки, статус и возвращаем итерируемый объект (т.к. тело может быть слишком большим)
-        start_response(response.status, response.headers)
+        start_response(response.status, response.headers_wsgi)
         return [response.body]
+
+    def _get_request(self, environ: dict):
+        request = Request(environ)
+        request.settings = self.settings
+
+        for middleware in self.middlewares:
+            middleware.process_request(request)
+        return request
+
+    def _get_response(self, request) -> Response:
+        view: View | Callable = self._find_view(request)
+        view_method = self._get_method_if_view_class(view, request)
+        response: Response = view_method(request)
+
+        for middleware in self.middlewares:
+            middleware.process_response(response)
+
+        response.headers_to_wsgi(base_headers=self.settings["DEFAULT_HEADERS"])
+        return response
+
+    def _find_view(self, request) -> Callable:
+        try:
+            for path in self.urls:
+                if re.match(path.url, request.url):
+                    return path.view
+            raise PageNotFound
+        except PageNotFound:
+            return page_not_found
+
+    def _get_method_if_view_class(self, view: View, request) -> Callable:
+        # if issubclass(view, View):
+        # проверка: view является классом
+        if isinstance(view, type):
+            method = request.method.lower()
+            if not hasattr(view, method):
+                raise MethodNotAllowed
+            return getattr(view(), method)
+        else:
+            return view

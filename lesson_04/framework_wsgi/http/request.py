@@ -11,6 +11,7 @@ class Request:
         self.method = environ["REQUEST_METHOD"].upper()
         self.cookies = {}
         self.headers = {k[5:]: v for k, v in environ.items() if k.startswith("HTTP_")}
+        self.settings = {}
 
         self._fill_post_params(environ["wsgi.input"])
         self._fill_get_params(environ["QUERY_STRING"])
