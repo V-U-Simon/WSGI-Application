@@ -1,18 +1,18 @@
 # Pattern: page_controllers
 
 from framework_wsgi.templator import render
+from framework_wsgi.views import View
+from framework_wsgi.http.response import Response
 
 
-class Index:
-    def __call__(self, request):
+class Index(View):
+    def get(self, request) -> Response:
         context = {"date": request.GET.get("date", None)}
-        return "200 OK", render("index.html", context=context)
+        return render(request, "index.html", context=context)
 
 
-class About:
-    # {'method': 'GET', 'request_params': {'id': '1', 'category': '10'}}
-    def __call__(self, request):
-        return "200 OK", render("about.html")
+def about(request) -> Response:
+    return render(request, "about.html")
 
 
 def contacts_view(request, *args, **kwargs):
@@ -25,4 +25,7 @@ def contacts_view(request, *args, **kwargs):
 
         return "200 OK", render("contact.html")
 
-    return "200 OK", render("contact.html")
+    return render(request, "contact.html")
+
+
+# {'method': 'GET', 'request_params': {'id': '1', 'category': '10'}}
