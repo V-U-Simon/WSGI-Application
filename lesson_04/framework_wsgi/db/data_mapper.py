@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import List, Type, TypeVar, Optional
-
 import sqlite3
-from typing import List, Type
+
+from framework_wsgi.db.query_object import SQLQuery
+
 
 T = TypeVar("T")  # Для обобщенного типа
 
@@ -46,42 +47,56 @@ class SQLiteDataMapper(DataMapperInterface):
 
     def insert(self, entity: T) -> None:
         data = self._serialize(entity)
-        columns = ", ".join(data.keys())
-        placeholders = ", ".join([f":{key}" for key in data.keys()])
-        query = f"INSERT INTO {self.entity_type.__name__} ({columns}) VALUES ({placeholders})"
-        cursor = self.connection.cursor()
-        cursor.execute(query, data)
-        self.connection.commit()
+        table_name = self.entity_type.__name__
 
-        entity.id = cursor.lastrowid  # Устанавливаем ID после вставки
+        query = SQLQuery(table=table_name, data=data)
+        query.INSERT()
+
+        cursor = self.connection.cursor()
+        cursor.execute(str(query), data)
+        self.connection.commit()
+        entity.id = cursor.lastrowid
 
     def update(self, entity: T) -> None:
         data = self._serialize(entity)
-        set_clause = ", ".join([f"{key}=:{key}" for key in data.keys() if key != "id"])
-        query = f"UPDATE {self.entity_type.__name__} SET {set_clause} WHERE id=:id"
+        table_name = self.entity_type.__name__
+
+        query = SQLQuery(table=table_name, data=data)
+        query.UPDATE().WHERE("id=:id")
+
         cursor = self.connection.cursor()
-        cursor.execute(query, data)
+        cursor.execute(str(query), data)
         self.connection.commit()
 
     def delete(self, entity: T) -> None:
-        query = f"DELETE FROM {self.entity_type.__name__} WHERE id=:id"
+        table_name = self.entity_type.__name__
+
+        query = SQLQuery(table=table_name)
+        query.DELETE().WHERE("id=:id")
+
         cursor = self.connection.cursor()
-        cursor.execute(query, {"id": entity.id})
+        cursor.execute(str(query), {"id": entity.id})
         self.connection.commit()
 
     def find_by_id(self, id: int) -> Optional[T]:
-        query = f"SELECT * FROM {self.entity_type.__name__} WHERE id=:id"
+        table_name = self.entity_type.__name__
+
+        query = SQLQuery(table=table_name)
+        query.SELECT().WHERE("id=:id")
+
         cursor = self.connection.cursor()
-        cursor.execute(query, {"id": id})
-        self.connection.commit()
+        cursor.execute(str(query), {"id": id})
         row = cursor.fetchone()
         return self._deserialize(row) if row else None
 
     def find_all(self) -> List[T]:
-        query = f"SELECT * FROM {self.entity_type.__name__}"
+        table_name = self.entity_type.__name__
+
+        query = SQLQuery(table=table_name)
+        query.SELECT()
+
         cursor = self.connection.cursor()
-        cursor.execute(query)
-        self.connection.commit()
+        cursor.execute(str(query))
         rows = cursor.fetchall()
         return [self._deserialize(row) for row in rows]
 
