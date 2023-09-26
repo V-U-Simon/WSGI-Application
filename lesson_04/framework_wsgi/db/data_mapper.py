@@ -102,15 +102,15 @@ class SQLiteDataMapper(DataMapperInterface):
 
 
 if __name__ == "__main__":
-    from framework_wsgi.db.domain import Users, Courses
+    from framework_wsgi.db.domain import Users
     import os
 
     # соединение с БД
     curdir = os.path.dirname(os.path.abspath(__file__))
     db_path = curdir + "/../../education.db"
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    users_mapper = SQLiteDataMapper(conn, Users)
+    connecntion = sqlite3.connect(db_path)
+    connecntion.row_factory = sqlite3.Row
+    users_mapper = SQLiteDataMapper(connecntion, Users)
 
     # создание пользователя
     user = Users(name="John")
@@ -118,7 +118,7 @@ if __name__ == "__main__":
 
     # insert
     users_mapper.insert(user)
-    conn.commit()
+    connecntion.commit()
     print(f"insert: {user}")
 
     # select all
@@ -140,4 +140,4 @@ if __name__ == "__main__":
     users = users_mapper.find_all()
     print(f"delete: {users}")
 
-    conn.close()
+    connecntion.close()
