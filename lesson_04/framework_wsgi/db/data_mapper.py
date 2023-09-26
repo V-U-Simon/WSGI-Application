@@ -8,7 +8,7 @@ from framework_wsgi.db.query_object import SQLQuery
 T = TypeVar("T")  # Для обобщенного типа
 
 
-class DataMapperInterface(ABC):
+class DataMapper(ABC):
     @abstractmethod
     def insert(self, entity: T) -> None:
         pass
@@ -30,7 +30,7 @@ class DataMapperInterface(ABC):
         pass
 
 
-class SQLiteDataMapper(DataMapperInterface):
+class SQLiteDataMapper(DataMapper):
     def __init__(self, connection: sqlite3.Connection, entity_type: Type[T]):
         self.connection = connection
         self.entity_type = (
@@ -76,6 +76,7 @@ class SQLiteDataMapper(DataMapperInterface):
 
         cursor = self.connection.cursor()
         cursor.execute(str(query), {"id": entity.id})
+        entity.id = None
         self.connection.commit()
 
     def find_by_id(self, id: int) -> Optional[T]:
@@ -87,7 +88,9 @@ class SQLiteDataMapper(DataMapperInterface):
         cursor = self.connection.cursor()
         cursor.execute(str(query), {"id": id})
         row = cursor.fetchone()
-        return self._deserialize(row) if row else None
+        if not row:
+            raise ValueError(f"Passing id:{id} is not exist in database")
+        return self._deserialize(row)
 
     def find_all(self) -> List[T]:
         table_name = self.entity_type.__name__

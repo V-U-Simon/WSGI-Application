@@ -11,7 +11,7 @@ class MapperRegistry:
     @classmethod
     def register(cls, entity_type):
         """Регистрация нового маппера."""
-        cls._registry.append(entity_type)
+        cls.registry.append(entity_type)
 
 
 # Регистрация мапперов
