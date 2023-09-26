@@ -6,32 +6,38 @@ ID = Optional[int]
 
 
 # все пользователи
-class User:
+class Users:
     def __init__(self, name: str, id: ID = None):
         self.id = id
         self.name = name
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__}: {self.name}(id={self.id!r})>"
 
-class Teacher(User):
+
+class Teachers(Users):
     def __init__(self, name: str, id: ID = None):
         super().__init__(name, id)
 
 
-class Student(User):
+class Students(Users):
     def __init__(self, name: str, id: ID = None):
         super().__init__(name, id)
 
 
 # Категория курсов
-class Category:
+class Categories:
     def __init__(self, name: str, parent: ID = None, id: ID = None):
         self.id = id
         self.name = name
         self.parent = parent
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__}: {self.name}>"
+
 
 # Абстрактный базовый класс для курсов
-class Course(ABC):
+class Courses(ABC):
     def __init__(
         self,
         name: str,
@@ -45,15 +51,18 @@ class Course(ABC):
         self.category_id = category_id
         self.students: List[int] = []
 
-    def add_student(self, student: Student):
+    def add_student(self, student: Students):
         self.students.append(student)
 
-    def remove_student(self, student: Student):
+    def remove_student(self, student: Students):
         self.students.remove(student)
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}: {self.name}>"
 
 
 # Веб-курс
-class WebCourse(Course):
+class WebCourses(Courses):
     def __init__(
         self,
         name: str,
@@ -67,7 +76,7 @@ class WebCourse(Course):
 
 
 # Очный курс
-class LiveCourse(Course):
+class LiveCourses(Courses):
     def __init__(
         self,
         name: str,
@@ -95,9 +104,9 @@ class CourseFactory:
             raise ValueError("A course cannot be both a WebCourse and a LiveCourse")
 
         if url:
-            return WebCourse(name, category_id, teacher_id, url, id)
+            return WebCourses(name, category_id, teacher_id, url, id)
 
         if location:
-            return LiveCourse(name, category_id, teacher_id, location, id)
+            return LiveCourses(name, category_id, teacher_id, location, id)
 
         raise ValueError("Either url or location must be provided")
