@@ -1,6 +1,10 @@
 from typing import TypeVar
 
-from lesson_04.framework_wsgi.db.domain_users import Students, Teachers, Users
+from framework_wsgi.design_patterns.domain_users import (
+    Students,
+    Teachers,
+    Users,
+)
 
 T = TypeVar("T")
 

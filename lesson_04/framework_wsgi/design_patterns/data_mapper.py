@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Type, TypeVar, Optional
 import sqlite3
 
-from framework_wsgi.db.query_object import SQLQuery
+from framework_wsgi.design_patterns.query_object import SQLQuery
 
 
 T = TypeVar("T")  # Для обобщенного типа
@@ -102,7 +102,7 @@ class SQLiteDataMapper(DataMapper):
 
 
 if __name__ == "__main__":
-    from framework_wsgi.db.domain_users import Users
+    from framework_wsgi.design_patterns.domain_users import Users
     import os
 
     # соединение с БД
