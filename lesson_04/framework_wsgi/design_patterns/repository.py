@@ -4,7 +4,7 @@ import sqlite3
 from typing import Any
 
 from framework_wsgi.db.data_mapper import SQLiteDataMapper, DataMapper
-from framework_wsgi.db.domain import Students
+from lesson_04.framework_wsgi.db.domain_users import Students
 from framework_wsgi.db.mapper_registry import MapperRegistry
 from framework_wsgi.db import identity_map
 

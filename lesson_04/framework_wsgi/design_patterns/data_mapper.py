@@ -102,7 +102,7 @@ class SQLiteDataMapper(DataMapper):
 
 
 if __name__ == "__main__":
-    from framework_wsgi.db.domain import Users
+    from framework_wsgi.db.domain_users import Users
     import os
 
     # соединение с БД

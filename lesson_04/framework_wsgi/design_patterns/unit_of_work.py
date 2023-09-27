@@ -5,7 +5,7 @@ import os
 import sqlite3
 
 from framework_wsgi.db.repository import SQLiteRepository
-from framework_wsgi.db.domain import Users
+from lesson_04.framework_wsgi.db.domain_users import Users
 from framework_wsgi.db import identity_map
 
 

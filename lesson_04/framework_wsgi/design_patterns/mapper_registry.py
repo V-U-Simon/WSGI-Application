@@ -1,6 +1,6 @@
 from typing import TypeVar
 
-from framework_wsgi.db.domain import Students, Teachers, Users
+from lesson_04.framework_wsgi.db.domain_users import Students, Teachers, Users
 
 T = TypeVar("T")
 
