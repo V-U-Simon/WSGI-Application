@@ -58,7 +58,7 @@ class SQLiteRepository:
 
     def delete(self, entity: T) -> None:
         mapper = SQLiteDataMapper(self.connecntion, type(entity))
-        mapper.delete(student)
+        mapper.delete(entity)
 
     def find_by_id(self, id: int) -> Optional[T]:
         return self.current_mapper.find_by_id(id)

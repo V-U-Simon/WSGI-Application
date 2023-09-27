@@ -54,7 +54,6 @@ class SQLiteDataMapper(DataMapper):
 
         cursor = self.connection.cursor()
         cursor.execute(str(query), data)
-        self.connection.commit()
         entity.id = cursor.lastrowid
 
     def update(self, entity: T) -> None:
@@ -66,7 +65,6 @@ class SQLiteDataMapper(DataMapper):
 
         cursor = self.connection.cursor()
         cursor.execute(str(query), data)
-        self.connection.commit()
 
     def delete(self, entity: T) -> None:
         table_name = self.entity_type.__name__
@@ -77,7 +75,6 @@ class SQLiteDataMapper(DataMapper):
         cursor = self.connection.cursor()
         cursor.execute(str(query), {"id": entity.id})
         entity.id = None
-        self.connection.commit()
 
     def find_by_id(self, id: int) -> Optional[T]:
         table_name = self.entity_type.__name__
@@ -135,11 +132,13 @@ if __name__ == "__main__":
     # update
     user.name = "Joe"
     users_mapper.update(user)
+    connecntion.commit()
     user = users_mapper.find_by_id(user.id)
     print(f"update: {user}")
 
     # delete
     users_mapper.delete(user)
+    connecntion.commit()
     users = users_mapper.find_all()
     print(f"delete: {users}")
 
