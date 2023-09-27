@@ -6,7 +6,7 @@ from typing import Any
 from framework_wsgi.db.data_mapper import SQLiteDataMapper, DataMapper
 from framework_wsgi.db.domain import Students
 from framework_wsgi.db.mapper_registry import MapperRegistry
-
+from framework_wsgi.db import identity_map
 
 from abc import ABC, abstractmethod
 from typing import TypeVar, List, Optional
@@ -35,9 +35,10 @@ class RepositoryInterface(ABC):
 class SQLiteRepository:
     _registry = MapperRegistry.registry
 
-    def __init__(self, connecntion: sqlite3.Connection):
-        self.connecntion = connecntion
-        self.connecntion.row_factory = sqlite3.Row
+    def __init__(self, connection: sqlite3.Connection, identity_map):
+        self.connection = connection
+        self.connection.row_factory = sqlite3.Row
+        self.identity_map = identity_map
         self.current_mapper: DataMapper | None = None
 
     def __call__(self, entity_type):
@@ -46,25 +47,40 @@ class SQLiteRepository:
             raise AttributeError(
                 f"No mapper registered for entity: {entity_type.__name__}"
             )
-        self.current_mapper = SQLiteDataMapper(self.connecntion, entity_type)
+        self.current_mapper = SQLiteDataMapper(self.connection, entity_type)
         return self
 
     def save(self, entity: T) -> None:
-        mapper = SQLiteDataMapper(self.connecntion, type(entity))
+        entity_type = type(entity)
+        mapper = SQLiteDataMapper(self.connection, entity_type)
         if not entity.id:
             mapper.insert(entity)
+            self.identity_map.add(entity_type, entity.id, entity)
         else:
             mapper.update(entity)
+            self.identity_map.update(entity_type, entity.id, entity)
 
     def delete(self, entity: T) -> None:
-        mapper = SQLiteDataMapper(self.connecntion, type(entity))
+        entity_type = type(entity)
+        mapper = SQLiteDataMapper(self.connection, entity_type)
         mapper.delete(entity)
+        self.identity_map.remove(entity_type, entity.id)
 
     def find_by_id(self, id: int) -> Optional[T]:
-        return self.current_mapper.find_by_id(id)
+        entity = self.identity_map.get(self.current_mapper.entity_type, id)
+        if entity is None:
+            entity = self.current_mapper.find_by_id(id)
+            if entity:
+                self.identity_map.add(self.current_mapper.entity_type, id, entity)
+                print(f"Identity mapping: get {entity} from stash")
+        return entity
 
     def all(self) -> List[T]:
-        return self.current_mapper.find_all()
+        entities = self.current_mapper.find_all()
+        for entity in entities:
+            self.identity_map.add(self.current_mapper.entity_type, entity.id, entity)
+            print(f"Identity mapping: get {entity} from stash")
+            return entities
 
 
 if __name__ == "__main__":
@@ -72,7 +88,7 @@ if __name__ == "__main__":
 
     curdir = os.path.dirname(os.path.abspath(__file__))
     connection = sqlite3.connect(curdir + "/../../education.db")
-    repo = SQLiteRepository(connection)
+    repo = SQLiteRepository(connection, identity_map.IdentityMapStub())
 
     # создание пользователя
     student = Students(name="John")

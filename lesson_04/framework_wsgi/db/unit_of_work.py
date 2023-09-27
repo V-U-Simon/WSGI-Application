@@ -6,6 +6,7 @@ import sqlite3
 
 from framework_wsgi.db.repository import SQLiteRepository
 from framework_wsgi.db.domain import Users
+from framework_wsgi.db import identity_map
 
 
 class UnitOfWork(ABC):
@@ -28,22 +29,22 @@ def connection_factory_sqlite(db_path: str = None) -> sqlite3.Connection:
     return sqlite3.connect(db_path)
 
 
-class SQLiteUnitOfWork(UnitOfWork):
+class SQLiteUnitOfWork:
     def __init__(self, connection_factory=connection_factory_sqlite):
         self.connection: sqlite3.Connection | None = None
         self.create_connection = connection_factory
+        self.identity_map = identity_map.IdentityMap()
 
     def commit(self) -> None:
         self.connection.execute("COMMIT")
 
     def rollback(self) -> None:
-        self.connection.execute("RALLBACK")
+        self.connection.execute("ROLLBACK")
 
-    def __enter__(self) -> None:
+    def __enter__(self) -> "SQLiteRepository":
         self.connection = self.create_connection()
-        # в SQLite doesn't need as open transactions by default
         self.connection.execute("BEGIN")
-        return SQLiteRepository(self.connection)
+        return SQLiteRepository(self.connection, self.identity_map)
 
     def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None:
         if exc_type is not None:
@@ -51,6 +52,7 @@ class SQLiteUnitOfWork(UnitOfWork):
         else:
             self.commit()
         self.connection.close()
+        self.identity_map.clear()
 
 
 if __name__ == "__main__":
@@ -84,8 +86,8 @@ if __name__ == "__main__":
             user = Users(name="ErrorNameForExample")
             repo.save(user)
             print(f"{user}")
+            raise sqlite3.OperationalError
 
-            raise
     except sqlite3.OperationalError:
         # Проверяем налчие пользователя в БД с именем ErrorNameForExample
         with uow as repo:
