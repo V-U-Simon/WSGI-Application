@@ -1,6 +1,8 @@
 from typing import List, Optional, Union
 from abc import ABC, abstractmethod
 
+from lesson_04.framework_wsgi.design_patterns.domain_users import Students
+
 
 ID = Optional[int]
 
@@ -31,11 +33,11 @@ class Courses(ABC):
         self.category_id = category_id
         self.students: List[int] = []
 
-    def add_student(self, student: Students):
-        self.students.append(student)
+    def add_student(self, student_id: ID):
+        self.students.append(student_id)
 
-    def remove_student(self, student: Students):
-        self.students.remove(student)
+    def remove_student(self, student_id: ID):
+        self.students.remove(student_id)
 
     def __repr__(self):
         return f"<{self.__class__.__name__}: {self.name}>"
