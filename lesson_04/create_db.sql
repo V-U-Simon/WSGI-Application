@@ -23,15 +23,13 @@ CREATE TABLE Users (
 -- Создание таблицы Teachers
 CREATE TABLE Teachers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    name TEXT NOT NULL
 );
 
 -- Создание таблицы Students
 CREATE TABLE Students (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    name TEXT NOT NULL
 );
 
 -- Создание таблицы Categories
