@@ -11,10 +11,9 @@ class CourseListView(views.ListView):
     template_name = "course_list.html"
 
 
-# class CourseDetailView:
-#     # select one
-#     def get(request, course_id) -> Response:
-#         pass
+class CourseDetailView(views.DetailView):
+    model = Courses
+    template_name = "course_detail.html"
 
 
 # class CourseCreateView:

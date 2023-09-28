@@ -1,6 +1,7 @@
 import os
 import sqlite3
-from typing import TypeVar
+
+from typing import TypeVar, Optional, List
 from framework_wsgi.design_patterns.connector import ConnectorDB
 from framework_wsgi.design_patterns.repository import SQLiteRepository
 from framework_wsgi.http import Response, Request
@@ -55,22 +56,23 @@ class TemplateView(View):
 T = TypeVar("T")
 
 
-class ListView(TemplateView):
-    model: T | None = None
-    template_name = "list_template.html"
-    queryset = []
-    context_object_name = "object_list"
-
+class ModelAndQuerySet:
     def get_queryset(self):
         if self.model:
             with uow as repo:
                 qs = repo(self.model).all()
                 return qs
-
         return self.queryset
 
     def get_context_object_name(self):
         return self.context_object_name
+
+
+class ListView(ModelAndQuerySet, TemplateView):
+    model: T | None = None
+    template_name = "template_list.html"
+    queryset = []
+    context_object_name = "object_list"
 
     def get_context_data(self) -> dict:
         queryset = self.get_queryset()
@@ -79,22 +81,30 @@ class ListView(TemplateView):
         return context
 
 
-# class ListView(TemplateView):
-#     queryset = []
-#     template_name = "list.html"
-#     context_object_name = "objects_list"
+class DetailView(ModelAndQuerySet, TemplateView):
+    model: T | None = None
+    template_name = "template_detail.html"
+    object_id: Optional[int] = "id"
+    queryset: List[T] = []
+    context_object_name = "object"
 
-#     def get_queryset(self):
-#         return self.queryset
+    def get_object_id(self):
+        object_id = self.request.kwargs.get(self.object_id, None)
+        return int(object_id)
 
-#     def get_context_object_name(self):
-#         return self.context_object_name
+    def get_object(self):
+        queryset = self.get_queryset()
+        object_id = self.get_object_id()
 
-#     def get_context_data(self):
-#         queryset = self.get_queryset()
-#         context_object_name = self.get_context_object_name()
-#         context = {context_object_name: queryset}
-#         return context
+        if queryset and object_id:
+            return next((item for item in queryset if item.id == object_id), None)
+        raise Exception("QuerySet or object_id not found")
+
+    def get_context_data(self) -> dict:
+        obj = self.get_object()
+        context_object_name = self.get_context_object_name()
+        context = {context_object_name: obj}
+        return context
 
 
 def page_not_found(request) -> Response:
