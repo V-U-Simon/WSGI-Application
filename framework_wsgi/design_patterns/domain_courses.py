@@ -1,8 +1,6 @@
 from typing import List, Optional, Union
 from abc import ABC, abstractmethod
 
-from lesson_04.framework_wsgi.design_patterns.domain_users import Students
-
 
 ID = Optional[int]
 
@@ -19,12 +17,14 @@ class Categories:
 
 
 # Абстрактный базовый класс для курсов
-class Courses(ABC):
+class Courses:
     def __init__(
         self,
         name: str,
         category_id: ID,
         teacher_id: ID,
+        location: str,
+        url: str,
         id: ID = None,
     ):
         self.id = id
@@ -32,6 +32,8 @@ class Courses(ABC):
         self.teacher_id = teacher_id
         self.category_id = category_id
         self.students: List[int] = []
+        self.location = location
+        self.url = url
 
     def add_student(self, student_id: ID):
         self.students.append(student_id)
@@ -42,53 +44,26 @@ class Courses(ABC):
     def __repr__(self):
         return f"<{self.__class__.__name__}: {self.name}>"
 
-
-# Веб-курс
-class WebCourses(Courses):
-    def __init__(
-        self,
-        name: str,
-        category_id: ID,
-        teacher_id: ID,
-        url: str,
-        id: ID = None,
-    ):
-        super().__init__(name, category_id, teacher_id, id)
-        self.url = url
+    def __str__(self):
+        return f"<{self.__class__.__name__}: {self.name}>"
 
 
-# Очный курс
-class LiveCourses(Courses):
-    def __init__(
-        self,
-        name: str,
-        category_id: ID,
-        teacher_id: ID,
-        location: str,
-        id: ID = None,
-    ):
-        super().__init__(name, category_id, teacher_id, id)
-        self.location = location
+# Фабирчный метод
+def course_factory(
+    name: str,
+    category_id: ID,
+    teacher_id: ID,
+    url: Optional[str] = None,
+    location: Optional[str] = None,
+    id: ID = None,
+):
+    if url and location:
+        raise ValueError("A course cannot be both a WebCourse and a LiveCourse")
 
+    if url:
+        return Courses(name, category_id, teacher_id, url, id)
 
-# Фабрика курсов
-class CourseFactory:
-    @staticmethod
-    def create_course(
-        name: str,
-        category_id: ID,
-        teacher_id: ID,
-        url: Optional[str] = None,
-        location: Optional[str] = None,
-        id: ID = None,
-    ):
-        if url and location:
-            raise ValueError("A course cannot be both a WebCourse and a LiveCourse")
+    if location:
+        return Courses(name, category_id, teacher_id, location, id)
 
-        if url:
-            return WebCourses(name, category_id, teacher_id, url, id)
-
-        if location:
-            return LiveCourses(name, category_id, teacher_id, location, id)
-
-        raise ValueError("Either url or location must be provided")
+    raise ValueError("Either url or location must be provided")

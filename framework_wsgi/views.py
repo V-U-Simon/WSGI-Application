@@ -1,15 +1,15 @@
 import os
 import sqlite3
 from typing import TypeVar
-from framework_wsgi.design_patterns import connector
+from framework_wsgi.design_patterns.connector import ConnectorDB
 from framework_wsgi.design_patterns.repository import SQLiteRepository
 from framework_wsgi.http import Response, Request
 from framework_wsgi.templator import render, TemplateEngineHTML, TemplateEngine
 from framework_wsgi.design_patterns.unit_of_work import SQLiteUnitOfWork
 
 
-connection = connector.ConnectorDB.connect()
-uow = SQLiteUnitOfWork(connection)
+# connection = ConnectorDB.connect()
+uow = SQLiteUnitOfWork(ConnectorDB)
 
 
 # pattern: template method, CBV
@@ -54,19 +54,28 @@ class TemplateView(View):
 T = TypeVar("T")
 
 
-# class ListView(TemplateView):
-#     model: T | None = None
-#     queryset = []
-#     context_object_name = "object_list"
-#     template_name = (
-#         "list_" + model.__name__.lower() or type(queryset[0]).__name__.lower()
-#     )
+class ListView(TemplateView):
+    model: T | None = None
+    template_name = "list_template.html"
+    queryset = []
+    context_object_name = "object_list"
 
-#     def get_context_data(self, *args, **kwargs):
-#         context = super().get_context_data(**kwargs)
+    def get_queryset(self):
+        if self.model:
+            with uow as repo:
+                qs = repo(self.model).all()
+                return qs
 
-#         context[self.context_object_name] = self.repository.all()
-#         return context
+        return self.queryset
+
+    def get_context_object_name(self):
+        return self.context_object_name
+
+    def get_context_data(self) -> dict:
+        queryset = self.get_queryset()
+        context_object_name = self.get_context_object_name()
+        context = {context_object_name: queryset}
+        return context
 
 
 # class ListView(TemplateView):
@@ -91,23 +100,3 @@ def page_not_found(request) -> Response:
     response = render(request, "page_not_found.html")
     response.status = "404 Not Found"
     return response
-
-
-# # Корректная транзакция
-# with uow as repo:
-#     users = repo(Users).all()
-#     print(users)
-
-#     user = Users(name="Mike")
-#     repo.save(user)
-#     print(f"{user}")
-
-#     user.name = "Mikki"
-#     repo.save(user)
-#     print(f"{user}")
-
-#     users = repo(Users).all()
-#     print(users)
-
-#     repo.delete(user)
-#     print(f"{user}")

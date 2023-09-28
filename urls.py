@@ -1,9 +1,11 @@
 from framework_wsgi.urls import Url
 import views_main
+import views_courses
 
 
 # Pattern: front_controllers
 urlpatterns = [
+    Url("^/courses/$", views_courses.CourseListView),
     Url("/contact/", views_main.contacts_view),
     Url("^/about/$", views_main.about),
     Url("^/$", views_main.Index),
