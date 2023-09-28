@@ -38,7 +38,7 @@ class Application:
     def _get_response(self, request) -> Response:
         view: View | Callable = self._find_view(request)
         view_method = self._get_method_if_view_class(view, request)
-        response: Response = view_method(request)
+        response: Response = view_method(request, **request.kwargs)
 
         for middleware in self.middlewares:
             middleware.process_response(response)
@@ -49,7 +49,9 @@ class Application:
     def _find_view(self, request) -> Callable:
         try:
             for path in self.urls:
-                if re.match(path.url, request.url):
+                matched_params = path.match(request.url)
+                if matched_params is not None:
+                    request.kwargs = matched_params  # Извлечение параметров из URL
                     return path.view
             raise PageNotFound
         except PageNotFound:

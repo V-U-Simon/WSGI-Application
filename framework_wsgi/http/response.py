@@ -11,6 +11,7 @@ class Response:
         headers: dict = {},
     ):
         self.request = request
+        self.kwargs = {}
         self.status = status
 
         self.headers = headers

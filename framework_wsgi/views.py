@@ -15,10 +15,10 @@ uow = SQLiteUnitOfWork(ConnectorDB)
 # pattern: template method, CBV
 class View:
     def get(self, request, *args, **kwargs) -> Response:
-        pass
+        self.request = request
 
     def post(self, request, *args, **kwargs) -> Response:
-        pass
+        self.request = request
 
 
 class TemplateView(View):
@@ -26,6 +26,7 @@ class TemplateView(View):
     template_engine: TemplateEngine = TemplateEngineHTML
 
     def get(self, request: Request, *args, **kwargs) -> Response:
+        super().get(request, *args, **kwargs)
         return self.render_to_response(request, *args, **kwargs)
 
     def render_to_response(self, request, *args, **kwargs):
