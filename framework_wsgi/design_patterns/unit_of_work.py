@@ -7,6 +7,7 @@ import sqlite3
 from framework_wsgi.design_patterns.repository import SQLiteRepository
 from framework_wsgi.design_patterns.domain_users import Users
 from framework_wsgi.design_patterns import identity_map
+from framework_wsgi.design_patterns.connector import ConnectorDB, DatabaseConnector
 
 
 class UnitOfWork(ABC):
@@ -23,16 +24,10 @@ class UnitOfWork(ABC):
         raise NotImplementedError
 
 
-def connection_factory_sqlite(db_path: str = None) -> sqlite3.Connection:
-    if db_path is None:
-        db_path = os.path.dirname(os.path.abspath(__file__)) + "/../../education.db"
-    return sqlite3.connect(db_path)
-
-
 class SQLiteUnitOfWork:
-    def __init__(self, connection_factory=connection_factory_sqlite):
+    def __init__(self, db_connector: DatabaseConnector = ConnectorDB):
         self.connection: sqlite3.Connection | None = None
-        self.create_connection = connection_factory
+        self.db_connector = db_connector
         self.identity_map = identity_map.IdentityMap()
 
     def commit(self) -> None:
@@ -42,7 +37,7 @@ class SQLiteUnitOfWork:
         self.connection.execute("ROLLBACK")
 
     def __enter__(self) -> "SQLiteRepository":
-        self.connection = self.create_connection()
+        self.connection = self.db_connector.connect()
         self.connection.execute("BEGIN")
         return SQLiteRepository(self.connection, self.identity_map)
 

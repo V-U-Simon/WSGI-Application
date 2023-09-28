@@ -87,7 +87,7 @@ if __name__ == "__main__":
     # соединение с БД
 
     curdir = os.path.dirname(os.path.abspath(__file__))
-    connection = sqlite3.connect(curdir + "/../../education.db")
+    connection = sqlite3.connect(curdir + "/education.db")
     repo = SQLiteRepository(connection, identity_map.IdentityMapStub())
 
     # создание пользователя

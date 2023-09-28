@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Type, TypeVar, Optional
 import sqlite3
-
 from framework_wsgi.design_patterns.query_object import SQLQuery
 
 
@@ -103,14 +102,11 @@ class SQLiteDataMapper(DataMapper):
 
 if __name__ == "__main__":
     from framework_wsgi.design_patterns.domain_users import Users
-    import os
+    from framework_wsgi.design_patterns.connector import ConnectorDB
 
     # соединение с БД
-    curdir = os.path.dirname(os.path.abspath(__file__))
-    db_path = curdir + "/../../education.db"
-    connecntion = sqlite3.connect(db_path)
-    connecntion.row_factory = sqlite3.Row
-    users_mapper = SQLiteDataMapper(connecntion, Users)
+    connection = ConnectorDB.connect()
+    users_mapper = SQLiteDataMapper(connection, Users)
 
     # создание пользователя
     user = Users(name="John")
@@ -118,7 +114,7 @@ if __name__ == "__main__":
 
     # insert
     users_mapper.insert(user)
-    connecntion.commit()
+    connection.commit()
     print(f"insert: {user}")
 
     # select all
@@ -132,14 +128,14 @@ if __name__ == "__main__":
     # update
     user.name = "Joe"
     users_mapper.update(user)
-    connecntion.commit()
+    connection.commit()
     user = users_mapper.find_by_id(user.id)
     print(f"update: {user}")
 
     # delete
     users_mapper.delete(user)
-    connecntion.commit()
+    connection.commit()
     users = users_mapper.find_all()
     print(f"delete: {users}")
 
-    connecntion.close()
+    connection.close()
