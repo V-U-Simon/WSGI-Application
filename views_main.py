@@ -1,14 +1,16 @@
 # Pattern: page_controllers
 
 from framework_wsgi.templator import render
-from framework_wsgi.views import View
+from framework_wsgi import views
 from framework_wsgi.http.response import Response
 
 
-class Index(View):
-    def get(self, request) -> Response:
-        context = {"date": request.GET.get("date", None)}
-        return render(request, "index.html", context=context)
+class Index(views.TemplateView):
+    template_name = "index.html"
+
+    # def get(self, request) -> Response:
+    #     context = {"date": request.GET.get("date", None)}
+    #     return render(request, "index.html", context=context)
 
 
 def about(request) -> Response:

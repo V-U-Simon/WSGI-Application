@@ -37,7 +37,7 @@ class TemplateEngine:
 
 class TemplateEngineHTML:
     def __init__(
-        self, request: Request, template_name, context={}, *args, **kwargs
+        self, request: Request, template_name: str, context: dict = {}, *args, **kwargs
     ) -> None:
         self.env = get_template_env(request.settings)
         self.template_name = template_name
