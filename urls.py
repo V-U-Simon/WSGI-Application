@@ -1,10 +1,10 @@
 from framework_wsgi.urls import Url
-import views
+import views_main
 
 
 # Pattern: front_controllers
 urlpatterns = [
-    Url("/contact/", views.contacts_view),
-    Url("^/about/$", views.about),
-    Url("^/$", views.Index),
+    Url("/contact/", views_main.contacts_view),
+    Url("^/about/$", views_main.about),
+    Url("^/$", views_main.Index),
 ]

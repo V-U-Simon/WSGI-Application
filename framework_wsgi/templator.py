@@ -4,36 +4,46 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from framework_wsgi.http.response import Response, Request
 
 
-class TemplateEngine:
-    def __init__(self, settings: dict):
-        self.base_dir = settings.get("BASE_DIR", ".")
-        self.template_dir = settings.get("TEMPLATES_DIR", "")
-        self.path = Path(self.base_dir, self.template_dir)
+def get_template_env(settings):
+    path = settings.TEMPLATES_DIR
 
-        if not self.path.exists:
-            Exception("Template directory does not exist")
-
-    def apply(self):
-        return Environment(
-            loader=FileSystemLoader(self.path),
-            autoescape=select_autoescape(
-                "html",
-            ),
-            extensions=[],
-        )
+    return Environment(
+        loader=FileSystemLoader(path),
+        autoescape=select_autoescape(
+            "html",
+        ),
+        extensions=[],
+    )
 
 
-def render(request: Request, template_name, context={}, **kwargs) -> Response:
-    engine = TemplateEngine(request.settings)
+def render(request: Request, template_name, context={}, *args, **kwargs) -> Response:
+    env = get_template_env(request.settings)
 
-    if not Path(engine.path, template_name).exists():
-        Exception(f"Template {template_name} does not exist")
+    # if not Path(env.path, template_name).exists():
+    #     Exception(f"Template {template_name} does not exist")
 
-    env = engine.apply()
-
-    # получаем шаблон
-    template = env.get_template(template_name)
-    # рендерим шаблон с параметрами
-    str_body = template.render(context)
-
+    template = env.get_template(template_name)  # получаем шаблон
+    str_body = template.render(context)  # рендерим шаблон с параметрами
     return Response(request=request, body=str_body)
+
+
+class TemplateEngine:
+    def __init__(self) -> None:
+        pass
+
+    def build(self) -> str:
+        pass
+
+
+class TemplateEngineHTML:
+    def __init__(
+        self, request: Request, template_name, context={}, *args, **kwargs
+    ) -> None:
+        self.env = get_template_env(request.settings)
+        self.template_name = template_name
+        self.context = context
+
+    def render(self) -> str:
+        template = self.env.get_template(self.template_name)  # получаем шаблон
+        str_body = template.render(self.context)  # рендерим шаблон с параметрами
+        return str_body

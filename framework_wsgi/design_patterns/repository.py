@@ -2,6 +2,7 @@ from abc import ABC
 import os
 import sqlite3
 from typing import Any
+from framework_wsgi.design_patterns.connector import ConnectorDB
 
 from framework_wsgi.design_patterns.data_mapper import SQLiteDataMapper, DataMapper
 from framework_wsgi.design_patterns.domain_users import Students
@@ -37,7 +38,6 @@ class SQLiteRepository:
 
     def __init__(self, connection: sqlite3.Connection, identity_map):
         self.connection = connection
-        self.connection.row_factory = sqlite3.Row
         self.identity_map = identity_map
         self.current_mapper: DataMapper | None = None
 
@@ -85,9 +85,7 @@ class SQLiteRepository:
 
 if __name__ == "__main__":
     # соединение с БД
-
-    curdir = os.path.dirname(os.path.abspath(__file__))
-    connection = sqlite3.connect(curdir + "/education.db")
+    connection = ConnectorDB.connect()
     repo = SQLiteRepository(connection, identity_map.IdentityMapStub())
 
     # создание пользователя

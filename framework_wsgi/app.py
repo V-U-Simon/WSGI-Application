@@ -43,7 +43,7 @@ class Application:
         for middleware in self.middlewares:
             middleware.process_response(response)
 
-        response.headers_to_wsgi(base_headers=self.settings["DEFAULT_HEADERS"])
+        response.headers_to_wsgi(base_headers=self.settings.DEFAULT_HEADERS)
         return response
 
     def _find_view(self, request) -> Callable:
