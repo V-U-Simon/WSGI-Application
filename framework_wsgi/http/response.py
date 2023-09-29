@@ -22,3 +22,8 @@ class Response:
     def headers_to_wsgi(self, base_headers: dict = {}):
         base_headers.update(self.headers)
         self.headers_wsgi = [(key, value) for key, value in base_headers.items()]
+
+    def redirect(self, redirect_uri):
+        self.status = "302 Found"
+        self.headers["Location"] = redirect_uri
+        return self
