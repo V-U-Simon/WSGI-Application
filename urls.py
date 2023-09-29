@@ -7,6 +7,7 @@ import views_courses
 urlpatterns = [
     Url("/courses/create/", views_courses.CourseCreateView),
     Url("/courses/<id>/update/", views_courses.CourseUpdateView),
+    Url("/courses/<id>/delete/", views_courses.CourseDeleteView),
     Url("/courses/<id>/", views_courses.CourseDetailView),
     Url("/courses/", views_courses.CourseListView),
     Url("/contact/", views_main.contacts_view),

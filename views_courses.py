@@ -73,6 +73,7 @@ class CourseUpdateView(views.UpdateView):
         return context
 
 
-# class CourseDeleteView:
-#     def get(request):
-#         pass
+class CourseDeleteView(views.DeleteView):
+    model = Courses
+    template_name = "course_delete.html"
+    success_url = "/courses/"

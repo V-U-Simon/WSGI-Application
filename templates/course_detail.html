@@ -9,6 +9,7 @@
         <p>{{ object.location }}</p>
         <p>{{ object.url }}</p>
         <a href="/courses/{{ object.id }}/update/">update</a>
+        <a href="/courses/{{ object.id }}/delete/">delete</a>
     {% else %}
         <p>Курс не найден.</p>
     {% endif %}

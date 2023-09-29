@@ -177,6 +177,7 @@ class UpdateView(SingleObject, ModelAndQuerySet, TemplateView):
         return context
 
     def post(self, request: Request, *args, **kwargs) -> Response:
+        self.request = request
         form_data: dict = self.prepare_form_data(request)
         response = self.process_form_data(request, form_data)
         return response
@@ -190,7 +191,7 @@ class UpdateView(SingleObject, ModelAndQuerySet, TemplateView):
             with uow as repo:
                 obj = self.model(**form_data)
                 repo.save(obj)
-            return Response(request).redirect(self.success_url)
+            return Response(request).redirect(self.success_url + obj.id)
         # invalid form
         except Exception:
             template_name = self.get_template()
@@ -207,6 +208,20 @@ class UpdateView(SingleObject, ModelAndQuerySet, TemplateView):
             )
             str_body = template_engine.render()
             return Response(request=request, body=str_body)
+
+
+class DeleteView(SingleObject, ModelAndQuerySet, TemplateView, View):
+    model: T | None = None
+    template_name = "object_delete.html"
+    success_url = "/courses/"
+    context_object_name = "object"
+
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        super().post(request, *args, **kwargs)
+        object = self.get_object()
+        with uow as repo:
+            repo.delete(object)
+        return Response(request).redirect(self.success_url)
 
 
 def page_not_found(request) -> Response:
