@@ -84,12 +84,8 @@ class ListView(ModelAndQuerySet, TemplateView):
         return context
 
 
-class DetailView(ModelAndQuerySet, TemplateView):
-    model: T | None = None
-    template_name = "template_detail.html"
+class SingleObject:
     object_id: Optional[int] = "id"
-    queryset: List[T] = []
-    context_object_name = "object"
 
     def get_object_id(self):
         object_id = self.request.kwargs.get(self.object_id, None)
@@ -110,6 +106,12 @@ class DetailView(ModelAndQuerySet, TemplateView):
         return context
 
 
+class DetailView(SingleObject, ModelAndQuerySet, TemplateView):
+    template_name = "template_detail.html"
+    queryset: List[T] = []
+    context_object_name = "object"
+
+
 from typing import Any, Dict
 
 
@@ -121,6 +123,60 @@ class CreateView(TemplateView):
 
     def post(self, request: Request, *args, **kwargs) -> Response:
         # Замените на ваш метод для получения данных формы
+        form_data: dict = self.prepare_form_data(request)
+        response = self.process_form_data(request, form_data)
+        return response
+
+    def prepare_form_data(self, request: Request) -> dict:
+        return request.POST
+
+    def process_form_data(self, request, form_data) -> Response:
+        # valid form
+        try:
+            with uow as repo:
+                obj = self.model(**form_data)
+                repo.save(obj)
+            return Response(request).redirect(self.success_url)
+        # invalid form
+        except Exception:
+            template_name = self.get_template()
+            context = self.get_context_data()
+            context.update({"form": form_data})
+            context.update({"excpt": "Someting going wrong. Try again."})
+
+            TemplateEngine: TemplateEngine = self.get_template_engine()
+
+            template_engine = TemplateEngine(
+                request=request,
+                template_name=template_name,
+                context=context,
+            )
+            str_body = template_engine.render()
+            return Response(request=request, body=str_body)
+
+
+class UpdateView(SingleObject, ModelAndQuerySet, TemplateView):
+    model: T | None = None
+    template_name = "template_form.html"
+    success_url = "/courses/"
+    context_object_name = "form"
+
+    def get_object_id(self):
+        object_id = self.request.kwargs.get(self.object_id, None)
+        return int(object_id)
+
+    def get_object(self):
+        with uow as repo:
+            obj = repo(self.model).find_by_id(self.get_object_id())
+        return obj
+
+    def get_context_data(self) -> dict:
+        obj = self.get_object()
+        context_object_name = self.context_object_name  # default context name - form
+        context = {context_object_name: obj}
+        return context
+
+    def post(self, request: Request, *args, **kwargs) -> Response:
         form_data: dict = self.prepare_form_data(request)
         response = self.process_form_data(request, form_data)
         return response

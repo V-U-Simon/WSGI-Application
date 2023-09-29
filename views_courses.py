@@ -34,16 +34,43 @@ class CourseCreateView(views.CreateView):
         return data
 
     def get_context_data(self) -> dict:
+        context = super().get_context_data()
         uow = SQLiteUnitOfWork(ConnectorDB)
         with uow as repo:
             categories = repo(Categories).all()
             teachers = repo(Teachers).all()
-        return {"categories": categories, "teachers": teachers}
+        context.update({"categories": categories, "teachers": teachers})
+        return context
 
 
-# class CourseUpdateView:
-#     def get(request):
-#         pass
+class CourseUpdateView(views.UpdateView):
+    model = Courses
+    template_name = "course_form.html"
+    success_url = "/courses/"
+
+    def prepare_form_data(self, request) -> dict:
+        data = super().prepare_form_data(request)
+        location_or_url = data.pop("location_or_url")
+        if location_or_url.startswith("http://"):
+            data["url"] = location_or_url
+        else:
+            data["location"] = location_or_url
+        return data
+
+    def get_context_data(self) -> dict:
+        context = super().get_context_data()
+        uow = SQLiteUnitOfWork(ConnectorDB)
+        with uow as repo:
+            categories = repo(Categories).all()
+            teachers = repo(Teachers).all()
+
+        context.update(
+            {
+                "categories": categories,
+                "teachers": teachers,
+            }
+        )
+        return context
 
 
 # class CourseDeleteView:
