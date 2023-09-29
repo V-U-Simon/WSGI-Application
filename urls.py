@@ -5,6 +5,7 @@ import views_courses
 
 # Pattern: front_controllers
 urlpatterns = [
+    Url("/courses/create/", views_courses.CourseCreateView),
     Url("/courses/<id>/", views_courses.CourseDetailView),
     Url("/courses/", views_courses.CourseListView),
     Url("/contact/", views_main.contacts_view),

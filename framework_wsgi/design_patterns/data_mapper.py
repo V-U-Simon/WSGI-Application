@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List, Type, TypeVar, Optional
 import sqlite3
+from framework_wsgi.design_patterns.domain_courses import Categories
+from framework_wsgi.design_patterns.domain_users import Teachers
 from framework_wsgi.design_patterns.query_object import SQLQuery
 
 

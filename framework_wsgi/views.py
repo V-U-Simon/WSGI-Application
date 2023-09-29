@@ -33,7 +33,8 @@ class TemplateView(View):
     def render_to_response(self, request, *args, **kwargs):
         template_name = self.get_template()
         context = self.get_context_data()
-        TemplateEngine = self.get_template_engine()
+        context.update(**kwargs)
+        TemplateEngine: TemplateEngine = self.get_template_engine()
 
         template_engine = TemplateEngine(
             request=request,
@@ -49,7 +50,7 @@ class TemplateView(View):
     def get_template_engine(self) -> TemplateEngine:
         return self.template_engine
 
-    def get_context_data(self):
+    def get_context_data(self) -> dict:
         return {}
 
 
@@ -57,6 +58,8 @@ T = TypeVar("T")
 
 
 class ModelAndQuerySet:
+    model: T | None = None
+
     def get_queryset(self):
         if self.model:
             with uow as repo:
@@ -105,6 +108,49 @@ class DetailView(ModelAndQuerySet, TemplateView):
         context_object_name = self.get_context_object_name()
         context = {context_object_name: obj}
         return context
+
+
+from typing import Any, Dict
+
+
+class CreateView(TemplateView):
+    model: T | None = None
+    template_name = "template_form.html"
+    context_object_name = "form"
+    success_url = "/courses/"
+
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        # Замените на ваш метод для получения данных формы
+        form_data: dict = self.prepare_form_data(request)
+        response = self.process_form_data(request, form_data)
+        return response
+
+    def prepare_form_data(self, request: Request) -> dict:
+        return request.POST
+
+    def process_form_data(self, request, form_data) -> Response:
+        # valid form
+        try:
+            with uow as repo:
+                obj = self.model(**form_data)
+                repo.save(obj)
+            return Response(request).redirect(self.success_url)
+        # invalid form
+        except Exception:
+            template_name = self.get_template()
+            context = self.get_context_data()
+            context.update({"form": form_data})
+            context.update({"excpt": "Someting going wrong. Try again."})
+
+            TemplateEngine: TemplateEngine = self.get_template_engine()
+
+            template_engine = TemplateEngine(
+                request=request,
+                template_name=template_name,
+                context=context,
+            )
+            str_body = template_engine.render()
+            return Response(request=request, body=str_body)
 
 
 def page_not_found(request) -> Response:

@@ -23,3 +23,14 @@ class Url:
         if match:
             return match.groupdict()
         return None
+
+
+if __name__ == "__main__":
+    # Создание объекта Url
+    url_obj = Url("/courses/<id>/", "Example")
+
+    test_url = "/courses/1/"
+    print(test_url, url_obj.match(test_url))
+
+    test_url = "/courses/101/"
+    print(test_url, url_obj.match(test_url))

@@ -7,10 +7,10 @@ ID = Optional[int]
 
 # Категория курсов
 class Categories:
-    def __init__(self, name: str, parent: ID = None, id: ID = None):
+    def __init__(self, name: str, parent_id: ID = None, id: ID = None):
         self.id = id
         self.name = name
-        self.parent = parent
+        self.parent = parent_id
 
     def __repr__(self):
         return f"<{self.__class__.__name__}: {self.name}>"

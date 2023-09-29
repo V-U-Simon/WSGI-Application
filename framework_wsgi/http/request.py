@@ -12,9 +12,10 @@ class Request:
         self.cookies = {}
         self.headers = {k[5:]: v for k, v in environ.items() if k.startswith("HTTP_")}
         self.settings = {}
+        self.kwargs = {}  # параметры запроса из path convercor
 
-        self._fill_post_params(environ["wsgi.input"])
-        self._fill_get_params(environ["QUERY_STRING"])
+        self._fill_post_params(environ["wsgi.input"])  # request.POST & request.FILES
+        self._fill_get_params(environ["QUERY_STRING"])  # request.GET
 
     @staticmethod
     def _prepare_url(url: str):
