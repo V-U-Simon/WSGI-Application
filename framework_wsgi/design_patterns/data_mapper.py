@@ -29,16 +29,21 @@ class DataMapper(ABC):
         pass
 
 
+# работает только с "плоскими" объектами
 class SQLiteDataMapper(DataMapper):
     def __init__(self, connection: sqlite3.Connection, entity_type: Type[T]):
         self.connection = connection
-        self.entity_type = (
-            entity_type  # Ожидается, что это класс, например User, Course и так далее
-        )
+        self.entity_type = entity_type
 
     def _serialize(self, entity: T) -> dict:
         # Преобразуем объект в словарь
-        return vars(entity)
+        result = {}
+        for key, value in vars(entity).items():
+            # Проверка, является ли значение вложенным объектом
+            if not isinstance(value, (str, int, float, bool, type(None))):
+                continue
+            result[key] = value
+        return result
 
     def _deserialize(self, row: dict) -> T:
         # Создаем объект из строки базы данных

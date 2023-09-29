@@ -1,7 +1,6 @@
 -- Удаление таблиц, если они существуют
 -- Удаляем в порядке, обратном созданию, с учетом зависимостей
-DROP TABLE IF EXISTS LiveCourses;
-DROP TABLE IF EXISTS WebCourses;
+DROP TABLE IF EXISTS CoursesStudents;
 DROP TABLE IF EXISTS Courses;
 DROP TABLE IF EXISTS Categories;
 DROP TABLE IF EXISTS Students;
@@ -42,4 +41,10 @@ CREATE TABLE Courses (
     SET NULL ON UPDATE CASCADE,
         FOREIGN KEY (teacher_id) REFERENCES Teachers(id) ON DELETE
     SET NULL ON UPDATE CASCADE
+);
+-- Создание таблицы CoursesStudents
+CREATE TABLE CoursesStudents (
+    course_id INTEGER,
+    student_id INTEGER,
+    FOREIGN KEY (course_id) REFERENCES Courses(id) FOREIGN KEY (student_id) REFERENCES Students(id)
 );
