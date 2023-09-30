@@ -1,7 +1,19 @@
 {% extends "base.html" %}
-{% block title %}Создать курс{% endblock %}
+{% block title %}
+    {% if form is defined and form.id is defined %}
+        Update Course
+    {% else %}
+        Create a New Course
+    {% endif %}
+{% endblock %}
 {% block body %}
-    <h1>Create a New Course</h1>
+    <h1>
+        {% if form is defined and form.id is defined %}
+            Update Course
+        {% else %}
+            Create a New Course
+        {% endif %}
+    </h1>
     <form method="POST" action="/courses/create/">
         {% if form.id %}<input type="hidden" name="id" value="{{ form.id }}">{% endif %}
         <label for="name">Course Name:</label>
@@ -31,7 +43,7 @@
                name="location_or_url"
                value="{{ form.location or form.url if form else '' }}"
                required>
-        <button type="submit">Create Course</button>
+        <button type="submit">submit</button>
         {% if excpt %}{{ excpt }}{% endif %}
     </form>
 {% endblock body %}

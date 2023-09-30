@@ -1,15 +1,27 @@
 {% extends "base.html" %}
-{% block title %}Создать курс{% endblock %}
+{% block title %}
+    {% if form is defined and form.id is defined %}
+        Update Student
+    {% else %}
+        Create a New Student
+    {% endif %}
+{% endblock %}
 {% block body %}
-    <h1>Create a New Student</h1>
+    <h1>
+        {% if form is defined and form.id is defined %}
+            Update Student
+        {% else %}
+            Create a New Student
+        {% endif %}
+    </h1>
+    {% if form is defined and form.id is defined %}<input type="hidden" name="id" value="{{ form.id }}">{% endif %}
     <form method="POST" action="/students/create/">
-        {% if form.id %}<input type="hidden" name="id" value="{{ form.id }}">{% endif %}
         <label for="name">Student Name:</label>
         <input type="text"
                id="name"
                name="name"
                value="{{ form.name if form else '' }}">
-        <button type="submit">Create Student</button>
+        <button type="submit">submit</button>
         {% if excpt %}{{ excpt }}{% endif %}
     </form>
 {% endblock body %}
