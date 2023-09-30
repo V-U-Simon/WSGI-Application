@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Курсы{% endblock %}
+{% block body %}
+    <h1>Наши курсы:</h1>
+    <ul>
+        {% for obj in object_list %}
+            <li>
+                <a href="/students/{{ obj.id }}">{{ obj.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href='/students/create/'>create</a>
+{% endblock body %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Детали курса{% endblock %}
+{% block body %}
+    <h1>Информация о курсе:</h1>
+    {% if object %}
+        <h2>{{ object.name }}</h2>
+        <p>{{ object.category_id }}</p>
+        <p>{{ object.teacher_id }}</p>
+        <p>{{ object.location }}</p>
+        <p>{{ object.url }}</p>
+        <a href="/students/{{ object.id }}/update/">update</a>
+        <a href="/students/{{ object.id }}/delete/">delete</a>
+    {% else %}
+        <p>Курс не найден.</p>
+    {% endif %}
+{% endblock body %}

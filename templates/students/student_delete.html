@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Подтверждение удаления{% endblock %}
+{% block body %}
+    <h1>Подтверждение удаления</h1>
+    <p>Вы уверены, что хотите удалить {{ object.name }}?</p>
+    <form method="POST" action="/students/{{ object.id }}/delete/">
+        <input type="submit" value="Удалить">
+    </form>
+    <a href="/courses/{{ object.id }}/">Отменить</a>
+{% endblock body %}
