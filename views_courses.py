@@ -11,17 +11,17 @@ from framework_wsgi.http.response import Response
 
 class CourseListView(views.ListView):
     model = Courses
-    template_name = "course_list.html"
+    template_name = "courses/course_list.html"
 
 
 class CourseDetailView(views.DetailView):
     model = Courses
-    template_name = "course_detail.html"
+    template_name = "courses/course_detail.html"
 
 
 class CourseCreateView(views.CreateView):
     model = Courses
-    template_name = "course_form.html"
+    template_name = "courses/course_form.html"
     success_url = "/courses/"
 
     def prepare_form_data(self, request) -> dict:
@@ -45,7 +45,7 @@ class CourseCreateView(views.CreateView):
 
 class CourseUpdateView(views.UpdateView):
     model = Courses
-    template_name = "course_form.html"
+    template_name = "courses/course_form.html"
     success_url = "/courses/"
 
     def prepare_form_data(self, request) -> dict:
@@ -75,5 +75,5 @@ class CourseUpdateView(views.UpdateView):
 
 class CourseDeleteView(views.DeleteView):
     model = Courses
-    template_name = "course_delete.html"
+    template_name = "courses/course_delete.html"
     success_url = "/courses/"

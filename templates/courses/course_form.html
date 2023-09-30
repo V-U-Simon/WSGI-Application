@@ -3,6 +3,7 @@
 {% block body %}
     <h1>Create a New Course</h1>
     <form method="POST" action="/courses/create/">
+        {% if form.id %}<input type="hidden" name="id" value="{{ form.id }}">{% endif %}
         <label for="name">Course Name:</label>
         <input type="text"
                id="name"
