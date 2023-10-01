@@ -1,5 +1,6 @@
 import re
 from typing import Callable, Iterable, Type
+from framework_wsgi.debug_decorator import debug
 
 from framework_wsgi.urls import Url
 from framework_wsgi.views import View, page_not_found
@@ -35,6 +36,7 @@ class Application:
             middleware.process_request(request)
         return request
 
+    @debug
     def _get_response(self, request) -> Response:
         view: View | Callable = self._find_view(request)
         view_method = self._get_method_if_view_class(view, request)
