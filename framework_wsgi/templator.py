@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -47,3 +48,45 @@ class TemplateEngineHTML:
         template = self.env.get_template(self.template_name)  # получаем шаблон
         str_body = template.render(self.context)  # рендерим шаблон с параметрами
         return str_body
+
+
+import json
+from framework_wsgi.http.response import Response, Request
+
+
+class TemplateEngineJSON:
+    def __init__(self, context: dict = {}, *args, **kwargs) -> None:
+        self.context = context
+
+    def render(self) -> str:
+        json_compatible_context = self.complex_to_dict(self.context)
+        json_body = json.dumps(json_compatible_context)
+        return json_body
+
+    @staticmethod
+    def complex_to_dict(obj, visited=None):
+        if visited is None:
+            visited = set()
+
+        if id(obj) in visited:
+            return None  # Циклическая ссылка
+
+        visited.add(id(obj))
+
+        if isinstance(obj, (str, int, float, bool, type(None))):
+            return obj
+
+        if isinstance(obj, list):
+            return [TemplateEngineJSON.complex_to_dict(e, visited) for e in obj]
+
+        if isinstance(obj, dict):
+            return {
+                key: TemplateEngineJSON.complex_to_dict(value, visited)
+                for key, value in obj.items()
+            }
+
+        obj_dict = obj.__dict__.copy()
+        for key, value in obj_dict.items():
+            obj_dict[key] = TemplateEngineJSON.complex_to_dict(value, visited)
+
+        return obj_dict

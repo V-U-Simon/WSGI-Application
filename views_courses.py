@@ -8,7 +8,7 @@ from framework_wsgi.design_patterns.domain_courses import (
 )
 from framework_wsgi.design_patterns.domain_users import Students, Teachers
 from framework_wsgi.design_patterns.unit_of_work import SQLiteUnitOfWork
-from framework_wsgi.templator import render
+from framework_wsgi.templator import TemplateEngineJSON, render
 from framework_wsgi import views
 from framework_wsgi.http.response import Response
 
@@ -16,6 +16,11 @@ from framework_wsgi.http.response import Response
 class CourseListView(views.ListView):
     model = Courses
     template_name = "courses/course_list.html"
+
+
+class JsonCourseListView(views.ListView):
+    model = Courses
+    template_engine = TemplateEngineJSON
 
 
 class CourseDetailView(views.DetailView):

@@ -25,6 +25,7 @@ urlpatterns = [
     Url("/courses/<id>/delete/", views_courses.CourseDeleteView),
     Url("/courses/<id>/", views_courses.CourseDetailView),
     Url("/courses/", views_courses.CourseListView),
+    Url("/courses_json/", views_courses.JsonCourseListView),
     # Students
     Url("/students/create/", views_students.StudentCreateView),
     Url("/students/<id>/update/", views_students.StudentUpdateView),
