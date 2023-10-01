@@ -1,3 +1,4 @@
+from ast import List
 from framework_wsgi.urls import Url
 import views_main
 import views_categories
@@ -6,12 +7,6 @@ import views_students
 import views_teachers
 import views_courses_students
 
-
-# <p>category: {{ next([c.name for c in categories if object.category_id == c.id]) }}</p>
-# <p>teacher: {{ teachers[object.teacher_id].name }}-{{ object.teacher_id }}</p>
-
-
-# {% for s in students %}{{ s.name }}{% endfor %}
 
 # Pattern: front_controllers
 urlpatterns = [
@@ -44,6 +39,19 @@ urlpatterns = [
     Url("/teachers/", views_teachers.TeacherListView),
     # Other
     Url("/contact/", views_main.contacts_view),
-    Url("/about/", views_main.about),
     Url("/", views_main.Index),
 ]
+
+
+class Router:
+    def __init__(self, url: str):
+        self.__urlpatterns: List[Url] = urlpatterns
+        self.__url = url
+
+    def __call__(self, cls):
+        self.__urlpatterns.append(Url(self.__url, cls))
+
+
+# выполнение Router (добавление дополенительного пути в urls)
+# так же избегание циклического импорта
+import views_other

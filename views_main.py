@@ -13,10 +13,6 @@ class Index(views.TemplateView):
     #     return render(request, "index.html", context=context)
 
 
-def about(request) -> Response:
-    return render(request, "about.html")
-
-
 def contacts_view(request, *args, **kwargs):
     if request.method == "POST":
         email = request.POST.get("email")
