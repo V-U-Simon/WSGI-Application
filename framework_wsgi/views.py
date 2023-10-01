@@ -121,6 +121,11 @@ class CreateView(TemplateView):
     context_object_name = "form"
     success_url = "/courses/"
 
+    def get_context_data(self) -> dict:
+        context = super().get_context_data()
+        context.update({self.context_object_name: {}})
+        return context
+
     def post(self, request: Request, *args, **kwargs) -> Response:
         # Замените на ваш метод для получения данных формы
         form_data: dict = self.prepare_form_data(request)
@@ -138,11 +143,11 @@ class CreateView(TemplateView):
                 repo.save(obj)
             return Response(request).redirect(self.success_url)
         # invalid form
-        except Exception:
+        except Exception as e:
             template_name = self.get_template()
             context = self.get_context_data()
-            context.update({"form": form_data})
-            context.update({"excpt": "Someting going wrong. Try again."})
+            context.update({self.context_object_name: form_data})
+            context.update({"excpt": f"Someting going wrong. {e}"})
 
             TemplateEngine: TemplateEngine = self.get_template_engine()
 
@@ -187,17 +192,19 @@ class UpdateView(SingleObject, ModelAndQuerySet, TemplateView):
 
     def process_form_data(self, request, form_data) -> Response:
         # valid form
+        obj = self.get_object()
+        for key, value in form_data.items():
+            obj.__setattr__(key, value)
         try:
             with uow as repo:
-                obj = self.model(**form_data)
                 repo.save(obj)
-            return Response(request).redirect(self.success_url + obj.id)
+            return Response(request).redirect(self.success_url + str(obj.id))
         # invalid form
-        except Exception:
+        except Exception as e:
             template_name = self.get_template()
             context = self.get_context_data()
             context.update({"form": form_data})
-            context.update({"excpt": "Someting going wrong. Try again."})
+            context.update({"excpt": f"Someting going wrong: {str(e)}"})
 
             TemplateEngine: TemplateEngine = self.get_template_engine()
 

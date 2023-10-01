@@ -2,6 +2,7 @@ from abc import ABC
 import os
 import sqlite3
 from typing import Any
+import uuid
 from framework_wsgi.design_patterns.connector import ConnectorDB
 
 from framework_wsgi.design_patterns.data_mapper import SQLiteDataMapper, DataMapper

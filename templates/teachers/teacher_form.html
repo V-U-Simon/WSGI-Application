@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 {% block title %}
-    {% if form is defined and form.id is defined %}
+    {% if form.id %}
         Update Teacher
     {% else %}
         Create a New Teacher
     {% endif %}
+    }
 {% endblock %}
 {% block body %}
     <h1>
-        {% if form is defined and form.id is defined %}
+        {% if form.id %}
             Update Teacher
         {% else %}
             Create a New Teacher
         {% endif %}
     </h1>
-    <form method="POST" action="/teachers/create/">
+    <form method="POST"
+          {% if form.id %}action="/teachers/{{ form.id }}/update/"{% else %}action="/teachers/create/"{% endif %}>
         {% if form is defined and form.id is defined %}<input type="hidden" name="id" value="{{ form.id }}">{% endif %}
         <label for="name">Teacher Name:</label>
         <input type="text"

@@ -10,7 +10,7 @@ class Categories:
     def __init__(self, name: str, parent_id: ID = None, id: ID = None):
         self.id = id
         self.name = name
-        self.parent = parent_id
+        self.parent_id = parent_id
 
     def __repr__(self):
         return f"<{self.__class__.__name__}: {self.name}>"
@@ -42,7 +42,8 @@ class Courses:
 
 
 class CoursesStudents:
-    def __init__(self, course_id: ID, student_id: ID):
+    def __init__(self, course_id: ID, student_id: ID, id: ID = None):
+        self.id = id
         self.course_id = course_id
         self.student_id = student_id
 

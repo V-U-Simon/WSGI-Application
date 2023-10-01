@@ -44,6 +44,7 @@ CREATE TABLE Courses (
 );
 -- Создание таблицы CoursesStudents
 CREATE TABLE CoursesStudents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     course_id INTEGER,
     student_id INTEGER,
     FOREIGN KEY (course_id) REFERENCES Courses(id) FOREIGN KEY (student_id) REFERENCES Students(id)

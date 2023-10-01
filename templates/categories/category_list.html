@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Categories{% endblock %}
+{% block body %}
+    <h1>Категории курсов:</h1>
+    <ul>
+        {% for obj in object_list %}
+            <li>
+                <a href="/categories/{{ obj.id }}">{{ obj.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href='/categories/create/'>create</a>
+{% endblock body %}

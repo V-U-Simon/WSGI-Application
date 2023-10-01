@@ -1,8 +1,12 @@
 # Pattern: page_controllers
 
 from framework_wsgi.design_patterns.connector import ConnectorDB
-from framework_wsgi.design_patterns.domain_courses import Categories, Courses
-from framework_wsgi.design_patterns.domain_users import Teachers
+from framework_wsgi.design_patterns.domain_courses import (
+    Categories,
+    Courses,
+    CoursesStudents,
+)
+from framework_wsgi.design_patterns.domain_users import Students, Teachers
 from framework_wsgi.design_patterns.unit_of_work import SQLiteUnitOfWork
 from framework_wsgi.templator import render
 from framework_wsgi import views
@@ -17,6 +21,41 @@ class CourseListView(views.ListView):
 class CourseDetailView(views.DetailView):
     model = Courses
     template_name = "courses/course_detail.html"
+
+    def get_context_data(self) -> dict:
+        obj = self.get_object()
+        context_object_name = self.get_context_object_name()
+        context = {context_object_name: obj}
+        uow = SQLiteUnitOfWork(ConnectorDB)
+        with uow as repo:
+            categories = repo(Categories).all()
+            teachers = repo(Teachers).all()
+            course_students = repo(CoursesStudents).all() or []
+            students = repo(Students).all()
+
+            course_students = [
+                c_s for c_s in course_students if c_s.course_id == obj.id
+            ]
+            id_students_on_course = [c.student_id for c in course_students]
+            students_on_course = list(
+                filter(lambda student: student.id in id_students_on_course, students)
+            )
+            students_not_on_course = list(
+                filter(
+                    lambda student: student.id not in id_students_on_course, students
+                )
+            )
+
+        context.update(
+            {
+                "categories": categories,
+                "teachers": teachers,
+                "course_students": course_students,
+                "students_on_course": students_on_course,
+                "students_not_on_course": students_not_on_course,
+            }
+        )
+        return context
 
 
 class CourseCreateView(views.CreateView):

@@ -4,10 +4,30 @@
     <h1>Информация о курсе:</h1>
     {% if object %}
         <h2>{{ object.name }}</h2>
-        <p>{{ object.category_id }}</p>
-        <p>{{ object.teacher_id }}</p>
-        <p>{{ object.location }}</p>
-        <p>{{ object.url }}</p>
+        <p>
+            category:
+            {% for c in categories %}
+                {% if object.category_id == c.id %}{{ c.name }}{% endif %}
+            {% endfor %}
+        </p>
+        <p>
+            teacher:
+            {% for t in teachers %}
+                {% if object.teacher_id == t.id %}{{ t.name }}{% endif %}
+            {% endfor %}
+        </p>
+        <p>
+            students:
+            {% for s in students_on_course %}{{ s.name }},{% endfor %}
+        </p>
+        <p>
+            {% if object.location %}location: {{ object.location }}{% endif %}
+        </p>
+        <p>
+            {% if object.url %}location: {{ object.url }}{% endif %}
+        </p>
+        {% include 'courses_student/add_student.html' %}
+        {% include 'courses_student/remove_student.html' %}
         <a href="/courses/{{ object.id }}/update/">update</a>
         <a href="/courses/{{ object.id }}/delete/">delete</a>
     {% else %}
