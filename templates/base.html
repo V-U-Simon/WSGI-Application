@@ -2,11 +2,14 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{{ static }}css/style.css">
     {% include 'css_style.html' %}
     <title>Школа программирования</title>
   </head>
   <body>
-    {% include 'navigation.html' %} 
-    {% block body %} {% endblock body %}
+    !!!! href="{{ static }}css/style.css" !!!!!
+    {% include 'navigation.html' %}
+    {% block body %}
+    {% endblock body %}
   </body>
 </html>

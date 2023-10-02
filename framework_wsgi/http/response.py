@@ -15,12 +15,18 @@ class Response:
         self.status = status
 
         self.headers = headers
+        if hasattr(request, "response_headers"):
+            self.headers.update(request.response_headers)
         self.headers_wsgi = {}
 
         self.body = body.encode("utf-8")
 
     def headers_to_wsgi(self, base_headers: dict = {}):
+        # устанавливаем значение заголовков по умолчанию и
+        # обновляем значение заголовков, если обновленные значчения полученные в процессе обработки запроса
         base_headers.update(self.headers)
+
+        # приводим заголовки к определенному wsgi формату
         self.headers_wsgi = [(key, value) for key, value in base_headers.items()]
 
     def redirect(self, redirect_uri):

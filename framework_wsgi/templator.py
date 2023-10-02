@@ -43,9 +43,12 @@ class TemplateEngineHTML:
         self.env = get_template_env(request.settings)
         self.template_name = template_name
         self.context = context
+        self.static_url = request.settings.STATIC_URL
+        request.response_headers = {"Content-Type": "text/html"}
 
     def render(self) -> str:
         template = self.env.get_template(self.template_name)  # получаем шаблон
+        template.globals["static"] = self.static_url  # добавляем url к static файлам
         str_body = template.render(self.context)  # рендерим шаблон с параметрами
         return str_body
 
@@ -55,8 +58,9 @@ from framework_wsgi.http.response import Response, Request
 
 
 class TemplateEngineJSON:
-    def __init__(self, context: dict = {}, *args, **kwargs) -> None:
+    def __init__(self, request, context: dict = {}, *args, **kwargs) -> None:
         self.context = context
+        request.response_headers = {"Content-Type": "application/json"}
 
     def render(self) -> str:
         json_compatible_context = self.complex_to_dict(self.context)

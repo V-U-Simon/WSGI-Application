@@ -37,12 +37,12 @@ class TemplateView(View):
         TemplateEngine: TemplateEngine = self.get_template_engine()
 
         template_engine = TemplateEngine(
-            request=request,
+            request=self.request,
             template_name=template_name,
             context=context,
         )
         str_body = template_engine.render()
-        return Response(request=request, body=str_body)
+        return Response(request=self.request, body=str_body)
 
     def get_template(self):
         return self.template_name

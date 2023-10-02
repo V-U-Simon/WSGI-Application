@@ -3,6 +3,7 @@ from framework_wsgi.urls import Url
 import views_main
 import views_categories
 import views_courses
+import views_static
 import views_students
 import views_teachers
 import views_courses_students
@@ -10,6 +11,8 @@ import views_courses_students
 
 # Pattern: front_controllers
 urlpatterns = [
+    # http://localhost:8000/static/css/style.css
+    Url("/static/.*/", views_static.StaticProcessor),
     # CoursesStudents
     Url("/courses/<id>/add_student/", views_courses_students.AddStudentView),
     Url("/courses/<id>/remove_student/", views_courses_students.RemoveStudentView),

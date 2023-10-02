@@ -17,5 +17,8 @@ class Settings:
     if not TEMPLATES_DIR.exists:
         Exception("Template directory does not exist")
 
+    STATIC_DIR_NAME = "staticfiles"
+    STATIC_URL = "static/"
+
 
 # print(Settings.TEMPLATES_DIR)
