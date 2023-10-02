@@ -24,8 +24,13 @@ def render(request: Request, template_name, context={}, *args, **kwargs) -> Resp
     #     Exception(f"Template {template_name} does not exist")
 
     template = env.get_template(template_name)  # получаем шаблон
+    template.globals[
+        "static"
+    ] = request.settings.STATIC_URL  # добавляем url к static файлам
     str_body = template.render(context)  # рендерим шаблон с параметрами
-    return Response(request=request, body=str_body)
+    response = Response(request=request, body=str_body)
+    response.headers.update({"Content-Type": "text/html"})
+    return response
 
 
 class TemplateEngine:

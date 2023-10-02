@@ -18,7 +18,7 @@ class Settings:
         Exception("Template directory does not exist")
 
     STATIC_DIR_NAME = "staticfiles"
-    STATIC_URL = "static/"
+    STATIC_URL = "/static/"
 
 
 # print(Settings.TEMPLATES_DIR)
