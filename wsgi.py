@@ -1,12 +1,18 @@
 import os
 from wsgiref.simple_server import make_server
-from framework_wsgi.app import Application
+from framework_wsgi.app import Application, DebugApplication
 from framework_wsgi.middleware import middlewares
 from urls import urlpatterns
 from settings import Settings
 
 
-application = Application(
+# application = Application(
+#     urls=urlpatterns,
+#     middlewares=middlewares,
+#     settings=Settings,
+# )
+
+application = DebugApplication(
     urls=urlpatterns,
     middlewares=middlewares,
     settings=Settings,

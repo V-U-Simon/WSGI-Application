@@ -1,3 +1,4 @@
+from pprint import pprint
 import re
 from typing import Callable, Iterable, Type
 from framework_wsgi.debug_decorator import debug
@@ -36,7 +37,6 @@ class Application:
             middleware.process_request(request)
         return request
 
-    @debug
     def _get_response(self, request) -> Response:
         view: View | Callable = self._find_view(request)
         view_method = self._get_method_if_view_class(view, request)
@@ -69,3 +69,21 @@ class Application:
             return getattr(view(), method)
         else:
             return view
+
+
+class FakeApplication(Application):
+    def __call__(self, environ, start_response):
+        start_response("200 OK", [("Content-Type", "text/html")])
+        return [b"200 OK"]
+
+
+class DebugApplication(Application):
+    """Отладочное приложение, выводит время подготовки ответа в консоль"""
+
+    def __call__(self, environ: dict, start_response) -> Iterable:
+        print("DEBUG MODE")
+        return super().__call__(environ, start_response)
+
+    @debug
+    def _get_response(self, request) -> Response:
+        return super()._get_response(request)
