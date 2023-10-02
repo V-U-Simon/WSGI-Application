@@ -1,6 +1,8 @@
 from typing import List, Optional, Union
 from abc import ABC, abstractmethod
 
+from framework_wsgi.design_patterns.observer_notifier import EMAILNotifier, SMSNotifier
+
 
 ID = Optional[int]
 
@@ -20,6 +22,6 @@ class Teachers(Users):
         super().__init__(name, id)
 
 
-class Students(Users):
+class Students(EMAILNotifier, Users):
     def __init__(self, name: str, id: ID = None):
         super().__init__(name, id)
