@@ -29,8 +29,9 @@ class AddStudentView(views.View):
 
         uow = SQLiteUnitOfWork(ConnectorDB)
         with uow as repo:
-            registration_on_course = CoursesStudents(course_id, student_id)
-            repo.save(registration_on_course)
+            addition_student = CoursesStudents(course_id, student_id)
+            repo.save(addition_student)
+
         return Response(request=request).redirect(f"/courses/{course_id}/")
 
 
@@ -39,19 +40,19 @@ class RemoveStudentView(views.View):
         course_id = request.kwargs.get("id", None)
         return int(course_id)
 
-    def get_registration_on_course_id(self, request):
-        registration_on_course_id = self.request.POST.get(
+    def get_student_id(self, request):
+        student_registrated_on_course_id = self.request.POST.get(
             "registration_on_course_id", None
         )
-        return int(registration_on_course_id)
+        return int(student_registrated_on_course_id)
 
     def post(self, request, *args, **kwargs):
         super().post(request, *args, **kwargs)
         course_id = self.get_course_id(request)
-        registration_on_course_id = self.get_registration_on_course_id(request)
+        student_id = self.get_student_id(request)
 
         uow = SQLiteUnitOfWork(ConnectorDB)
         with uow as repo:
-            registration = repo(CoursesStudents).find_by_id(registration_on_course_id)
-            repo.delete(registration)
+            removing_student = repo(CoursesStudents).find_by_id(student_id)
+            repo.delete(removing_student)
         return Response(request=request).redirect(f"/courses/{course_id}/")
