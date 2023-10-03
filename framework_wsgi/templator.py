@@ -27,6 +27,7 @@ def render(request: Request, template_name, context={}, *args, **kwargs) -> Resp
     template.globals[
         "static"
     ] = request.settings.STATIC_URL  # добавляем url к static файлам
+    context.update({"request": request})
     str_body = template.render(context)  # рендерим шаблон с параметрами
     response = Response(request=request, body=str_body)
     response.headers.update({"Content-Type": "text/html"})
@@ -48,6 +49,7 @@ class TemplateEngineHTML:
         self.env = get_template_env(request.settings)
         self.template_name = template_name
         self.context = context
+        self.context.update({"request": request})
         self.static_url = request.settings.STATIC_URL
         request.response_headers = {"Content-Type": "text/html"}
 
