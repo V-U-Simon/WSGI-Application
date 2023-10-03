@@ -1,35 +1,99 @@
 {% extends "base.html" %}
+{% block title %}
+    {% if form.id %}
+        Update Course
+    {% else %}
+        Create a New Course
+    {% endif %}
+{% endblock %}
 {% block body %}
-    <h1>Добавить студента на курс</h1>
-    <form method="POST" action="/courses/{{ course.id }}/update/">
-        <label for="name">Course Name:</label>
-        <input type="text"
-               id="name"
-               name="name"
-               value="{{ form.name if form else '' }}">
-        <label for="category_id">Category:</label>
-        <select id="category_id" name="category_id" required>
-            {% for category in categories %}
-                <option value="{{ category.id }}"
-                        {% if form and category.id == form.category_id %}selected{% endif %}>
-                    {{ category.name }}
-                </option>
-            {% endfor %}
-        </select>
-        <label for="teacher_id">Teacher:</label>
-        <select id="teacher_id" name="teacher_id" required>
-            {% for teacher in teachers %}
-                <option value="{{ teacher.id }}"
-                        {% if form and teacher.id == form.teacher_id %}selected{% endif %}>{{ teacher.name }}</option>
-            {% endfor %}
-        </select>
-        <label for="location_or_url">Location or URL:</label>
-        <input type="text"
-               id="location_or_url"
-               name="location_or_url"
-               value="{{ form.location or form.url if form else '' }}"
-               required>
-        <button type="submit">submit</button>
-        {% if excpt %}{{ excpt }}{% endif %}
-    </form>
+    <section id="main" class="wrapper style1">
+        <header class="major">
+            <h2>
+                {% if form.id %}
+                    Update Course
+                {% else %}
+                    Create a New Course
+                {% endif %}
+            </h2>
+        </header>
+        <div class="container">
+            <!-- Content -->
+            <section id="content">
+                <!-- Form -->
+                <form method="POST"
+                      {% if form.id %}action="/courses/{{ form.id }}/update/"{% else %}action="/courses/create/"{% endif %}>
+                    <!-- Course Name -->
+                    <div class="row uniform">
+                        <div class="6u 12u(3)">
+                            <input type="text"
+                                   id="name"
+                                   placeholder="Course Name"
+                                   name="name"
+                                   value="{{ form.name if form else '' }}">
+                        </div>
+                    </div>
+                    <!-- Location or URL -->
+                    <div class="row uniform">
+                        <div class="6u 12u(3)">
+                            <input type="text"
+                                   id="location_or_url"
+                                   name="location_or_url"
+                                   placeholder="Location or URL"
+                                   value="{{ form.location or form.url if form else '' }}"
+                                   required>
+                        </div>
+                    </div>
+                    <!-- Category -->
+                    <div class="row uniform">
+                        <div class="6u 12u(3)">
+                            <div class="select-wrapper">
+                                <label for="category_id">Category:</label>
+                                <select id="category_id" name="category_id" required>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}"
+                                                {% if form and category.id == form.category_id %}selected{% endif %}>
+                                            {{ category.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Teacher -->
+                    <div class="row uniform">
+                        <div class="6u 12u(3)">
+                            <div class="select-wrapper">
+                                <label for="teacher_id">Teacher:</label>
+                                <select id="teacher_id" name="teacher_id" required>
+                                    {% for teacher in teachers %}
+                                        <option value="{{ teacher.id }}"
+                                                {% if form and teacher.id == form.teacher_id %}selected{% endif %}>
+                                            {{ teacher.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row uniform">
+                        <div class="12u">
+                            <ul class="actions">
+                                <li>
+                                    <input type="submit" value="Submit" />
+                                </li>
+                                <li>
+                                    <a href="/courses/">Back to courses list</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row uniform">
+                        {% if excpt %}{{ excpt }}{% endif %}
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
 {% endblock body %}
+<button type="submit">submit</button>

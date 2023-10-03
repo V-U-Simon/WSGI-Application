@@ -1,16 +1,45 @@
 {% extends "base.html" %}
-{% block title %}Детали курса{% endblock %}
+{% block title %}Student{% endblock %}
 {% block body %}
-    <h1>Информация о курсе:</h1>
-    {% if object %}
-        <h2>{{ object.name }}</h2>
-        <p>{{ object.category_id }}</p>
-        <p>{{ object.teacher_id }}</p>
-        <p>{{ object.location }}</p>
-        <p>{{ object.url }}</p>
-        <a href="/students/{{ object.id }}/update/">update</a>
-        <a href="/students/{{ object.id }}/delete/">delete</a>
-    {% else %}
-        <p>Курс не найден.</p>
-    {% endif %}
+    <section id="main" class="wrapper style1">
+        {% if object %}
+            <header class="major">
+                <h2>Student: {{ object.name }}</h2>
+            </header>
+            <div class="container">
+                <!-- Content -->
+                <section id="content">
+                    <p>Some information about student:</p>
+                    <div class="row">
+                        <div class="6u 12u(2)">
+                            <ul>
+                                <li>
+                                    <strong>Studnet id</strong>: {{ object.id }}
+                                </li>
+                                <li>
+                                    <strong>Student name</strong>: {{ object.name }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <ul class="actions fit small">
+                        <li>
+                            <a href="/students/{{ object.id }}/update/" class="button fit small">update</a>
+                        </li>
+                        <li>
+                            <a href="/students/{{ object.id }}/delete/" class="button fit small">delete</a>
+                        </li>
+                        <li>
+                            <a href="/students/">back to student list</a>
+                        </li>
+                    </ul>
+                    <!-- Table -->
+                </section>
+            </div>
+        {% else %}
+            <header class="major">
+                <h2>Student: Not Found</h2>
+            </header>
+        {% endif %}
+    </section>
 {% endblock body %}

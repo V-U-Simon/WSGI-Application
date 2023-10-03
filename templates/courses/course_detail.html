@@ -1,36 +1,72 @@
 {% extends "base.html" %}
-{% block title %}Детали курса{% endblock %}
+{% block title %}Course Details{% endblock %}
 {% block body %}
-    <h1>Информация о курсе:</h1>
-    {% if object %}
-        <h2>{{ object.name }}</h2>
-        <p>
-            category:
-            {% for c in categories %}
-                {% if object.category_id == c.id %}{{ c.name }}{% endif %}
-            {% endfor %}
-        </p>
-        <p>
-            teacher:
-            {% for t in teachers %}
-                {% if object.teacher_id == t.id %}{{ t.name }}{% endif %}
-            {% endfor %}
-        </p>
-        <p>
-            students:
-            {% for s in students_on_course %}{{ s.name }},{% endfor %}
-        </p>
-        <p>
-            {% if object.location %}location: {{ object.location }}{% endif %}
-        </p>
-        <p>
-            {% if object.url %}location: {{ object.url }}{% endif %}
-        </p>
-        {% include 'courses_student/add_student.html' %}
-        {% include 'courses_student/remove_student.html' %}
-        <a href="/courses/{{ object.id }}/update/">update</a>
-        <a href="/courses/{{ object.id }}/delete/">delete</a>
-    {% else %}
-        <p>Курс не найден.</p>
-    {% endif %}
+    <section id="main" class="wrapper style1">
+        {% if object %}
+            <header class="major">
+                <h2>Course: {{ object.name }}</h2>
+            </header>
+            <div class="container">
+                <!-- Content -->
+                <section id="content">
+                    <p>Information about the course:</p>
+                    <div class="row">
+                        <div class="6u 12u(2)">
+                            <ul>
+                                <li>
+                                    <strong>Course ID</strong>: {{ object.id }}
+                                </li>
+                                <li>
+                                    <strong>Course name</strong>: {{ object.name }}
+                                </li>
+                                <li>
+                                    <strong>Category</strong>:
+                                    {% for c in categories %}
+                                        {% if object.category_id == c.id %}{{ c.name }}{% endif %}
+                                    {% endfor %}
+                                </li>
+                                <li>
+                                    <strong>Teacher</strong>:
+                                    {% for t in teachers %}
+                                        {% if object.teacher_id == t.id %}{{ t.name }}{% endif %}
+                                    {% endfor %}
+                                </li>
+                                <li>
+                                    <strong>Students</strong>:
+                                    {% for s in students_on_course %}{{ s.name }},{% endfor %}
+                                </li>
+                                <li>
+                                    {% if object.location %}
+                                        <strong>Location</strong>: {{ object.location }}
+                                    {% else %}
+                                        <strong>URL</strong>: {{ object.url }}
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <ul class="actions fit small">
+                        <li>
+                            <a href="/courses/{{ object.id }}/update/" class="button fit small">Update</a>
+                        </li>
+                        <li>
+                            <a href="/courses/{{ object.id }}/delete/" class="button fit small">Delete</a>
+                        </li>
+                        <li>
+                            <a href="/courses/">Back to course list</a>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+            <div class="container">
+                <h2>Student management:</h2>
+                {% include 'courses_student/add_student.html' %}
+                {% include 'courses_student/remove_student.html' %}
+            </div>
+        {% else %}
+            <header class="major">
+                <h2>Course: Not Found</h2>
+            </header>
+        {% endif %}
+    </section>
 {% endblock body %}

@@ -1,14 +1,57 @@
 {% extends "base.html" %}
-{% block title %}Курсы{% endblock %}
+{% block title %}Courses{% endblock %}
 {% block body %}
-    <h1>Наши курсы:</h1>
-    <ul>
-        {% for obj in object_list %}
-            <li>
-                <a href="/courses/{{ obj.id }}">{{ obj.name }}</a>
-            </li>
-        {% endfor %}
-    </ul>
-    <a href='/courses/create/'>create</a>
-    <a href='/courses_json/'>список курсов в JSON</a>
+    <section id="main" class="wrapper style1">
+        <header class="major">
+            <h2>All courses:</h2>
+            <p>Faucibus neque adipiscing mi lorem semper blandit</p>
+        </header>
+        <div class="container">
+            <!-- Content -->
+            <section id="content">
+                <!-- Table -->
+                <section>
+                    <a href='/courses_json/' class="button fit small">Get JSON of all Courses</a>
+                    <a href='/courses/create/' class="button special fit small">Create</a>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>URL</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for obj in object_list %}
+                                    <tr>
+                                        <td>{{ obj.id }}</td>
+                                        <td>
+                                            <a href="/courses/{{ obj.id }}">{{ obj.name }}</a>
+                                        </td>
+                                        <td>{{ obj.location }}</td>
+                                        <td>{{ obj.url }}</td>
+                                        <td>
+                                            <a href="/courses/{{ obj.id }}/update/" class="button fit small">Изменить</a>
+                                        </td>
+                                        <td>
+                                            <a href="/courses/{{ obj.id }}/delete/" class="button fit small">Удалить</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </section>
+            </section>
+        </div>
+    </section>
 {% endblock body %}

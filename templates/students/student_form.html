@@ -7,22 +7,48 @@
     {% endif %}
 {% endblock %}
 {% block body %}
-    <h1>
-        {% if form.id %}
-            Update Student
-        {% else %}
-            Create a New Student
-        {% endif %}
-    </h1>
-    <form method="POST"
-          {% if form.id %}action="/students/{{ form.id }}/update/"{% else %}action="/students/create/"{% endif %}>
-        >
-        <label for="name">Student Name:</label>
-        <input type="text"
-               id="name"
-               name="name"
-               value="{{ form.name if form else '' }}">
-        <button type="submit">submit</button>
-        {% if excpt %}{{ excpt }}{% endif %}
-    </form>
+    <section id="main" class="wrapper style1">
+        <header class="major">
+            <h2>
+                {% if form.id %}
+                    Update Student
+                {% else %}
+                    Create a New Student
+                {% endif %}
+            </h2>
+        </header>
+        <div class="container">
+            <!-- Content -->
+            <section id="content">
+                <!-- Form -->
+                <form method="POST"
+                      {% if form.id %}action="/students/{{ form.id }}/update/"{% else %}action="/students/create/"{% endif %}>
+                    <div class="row uniform">
+                        <div class="6u 12u(3)">
+                            <input type="text"
+                                   id="name"
+                                   placeholder="name"
+                                   name="name"
+                                   value="{{ form.name if form else '' }}">
+                        </div>
+                    </div>
+                    <div class="row uniform">
+                        {% if excpt %}{{ excpt }}{% endif %}
+                    </div>
+                    <div class="row uniform">
+                        <div class="12u">
+                            <ul class="actions">
+                                <li>
+                                    <input type="submit" value="Submit" />
+                                </li>
+                                <li>
+                                    <a href="/students/">back to student list</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
 {% endblock body %}

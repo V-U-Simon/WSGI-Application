@@ -5,25 +5,51 @@
     {% else %}
         Create a New Teacher
     {% endif %}
-    }
 {% endblock %}
 {% block body %}
-    <h1>
-        {% if form.id %}
-            Update Teacher
-        {% else %}
-            Create a New Teacher
-        {% endif %}
-    </h1>
-    <form method="POST"
-          {% if form.id %}action="/teachers/{{ form.id }}/update/"{% else %}action="/teachers/create/"{% endif %}>
-        {% if form is defined and form.id is defined %}<input type="hidden" name="id" value="{{ form.id }}">{% endif %}
-        <label for="name">Teacher Name:</label>
-        <input type="text"
-               id="name"
-               name="name"
-               value="{{ form.name if form else '' }}">
-        <button type="submit">submit</button>
-        {% if excpt %}{{ excpt }}{% endif %}
-    </form>
+    <section id="main" class="wrapper style1">
+        <header class="major">
+            <h2>
+                {% if form.id %}
+                    Update Teacher
+                {% else %}
+                    Create a New Teacher
+                {% endif %}
+            </h2>
+        </header>
+        <div class="container">
+            <!-- Content -->
+            <section id="content">
+                <!-- Form -->
+                <form method="POST"
+                      {% if form.id %}action="/teachers/{{ form.id }}/update/"{% else %}action="/teachers/create/"{% endif %}>
+                    <div class="row uniform">
+                        <div class="6u 12u(3)">
+                            <label for="name">Teacher Name:</label>
+                            <input type="text"
+                                   id="name"
+                                   name="name"
+                                   value="{{ form.name if form else '' }}">
+                        </div>
+                    </div>
+                    {% if form is defined and form.id is defined %}<input type="hidden" name="id" value="{{ form.id }}">{% endif %}
+                    <div class="row uniform">
+                        {% if excpt %}{{ excpt }}{% endif %}
+                    </div>
+                    <div class="row uniform">
+                        <div class="12u">
+                            <ul class="actions">
+                                <li>
+                                    <input type="submit" value="Submit" />
+                                </li>
+                                <li>
+                                    <a href="/teachers/">Back to teacher list</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
 {% endblock body %}

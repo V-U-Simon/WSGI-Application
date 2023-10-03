@@ -1,13 +1,59 @@
 {% extends "base.html" %}
 {% block title %}Categories{% endblock %}
 {% block body %}
-    <h1>Категории курсов:</h1>
-    <ul>
-        {% for obj in object_list %}
-            <li>
-                <a href="/categories/{{ obj.id }}">{{ obj.name }}</a>
-            </li>
-        {% endfor %}
-    </ul>
-    <a href='/categories/create/'>create</a>
+    <section id="main" class="wrapper style1">
+        <header class="major">
+            <h2>All Categories:</h2>
+            <p>Faucibus neque adipiscing mi lorem semper blandit</p>
+        </header>
+        <div class="container">
+            <!-- Content -->
+            <section id="content">
+                <!-- Table -->
+                <section>
+                    <a href='/categories/create/' class="button special fit small">Create</a>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Parent</th>
+                                    <!-- Новый столбец для отображения имени родителя -->
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for obj in object_list %}
+                                    <tr>
+                                        <td>{{ obj.id }}</td>
+                                        <td>
+                                            <a href="/categories/{{ obj.id }}">{{ obj.name }}</a>
+                                        </td>
+                                        <td>
+                                            {% for parent_obj in object_list %}
+                                                {% if parent_obj.id == obj.parent_id %}{{ parent_obj.name }}{% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            <a href="/categories/{{ obj.id }}/update/" class="button fit small">Изменить</a>
+                                        </td>
+                                        <td>
+                                            <a href="/categories/{{ obj.id }}/delete" class="button fit small">Удалить</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </section>
+            </section>
+        </div>
+    </section>
 {% endblock body %}

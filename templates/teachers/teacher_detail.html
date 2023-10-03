@@ -1,16 +1,45 @@
 {% extends "base.html" %}
-{% block title %}Детали курса{% endblock %}
+{% block title %}Teacher{% endblock %}
 {% block body %}
-    <h1>Информация о курсе:</h1>
-    {% if object %}
-        <h2>{{ object.name }}</h2>
-        <p>{{ object.category_id }}</p>
-        <p>{{ object.teacher_id }}</p>
-        <p>{{ object.location }}</p>
-        <p>{{ object.url }}</p>
-        <a href="/teachers/{{ object.id }}/update/">update</a>
-        <a href="/teachers/{{ object.id }}/delete/">delete</a>
-    {% else %}
-        <p>Курс не найден.</p>
-    {% endif %}
+    <section id="main" class="wrapper style1">
+        {% if object %}
+            <header class="major">
+                <h2>Teacher: {{ object.name }}</h2>
+            </header>
+            <div class="container">
+                <!-- Content -->
+                <section id="content">
+                    <p>Some information about teacher:</p>
+                    <div class="row">
+                        <div class="6u 12u(2)">
+                            <ul>
+                                <li>
+                                    <strong>Teacher ID</strong>: {{ object.id }}
+                                </li>
+                                <li>
+                                    <strong>Teacher name</strong>: {{ object.name }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <ul class="actions fit small">
+                        <li>
+                            <a href="/teachers/{{ object.id }}/update/" class="button fit small">Update</a>
+                        </li>
+                        <li>
+                            <a href="/teachers/{{ object.id }}/delete/" class="button fit small">Delete</a>
+                        </li>
+                        <li>
+                            <a href="/teachers/">Back to teacher list</a>
+                        </li>
+                    </ul>
+                    <!-- Table -->
+                </section>
+            </div>
+        {% else %}
+            <header class="major">
+                <h2>Teacher: Not Found</h2>
+            </header>
+        {% endif %}
+    </section>
 {% endblock body %}
