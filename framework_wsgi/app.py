@@ -80,8 +80,16 @@ class FakeApplication(Application):
 class DebugApplication(Application):
     """Отладочное приложение, выводит время подготовки ответа в консоль"""
 
-    def __call__(self, environ: dict, start_response) -> Iterable:
+    def __init__(
+        self,
+        urls: list[type[Url]],
+        middlewares: list[type[BaseMiddleWare]],
+        settings: dict,
+    ) -> None:
         print("DEBUG MODE")
+        super().__init__(urls, middlewares, settings)
+
+    def __call__(self, environ: dict, start_response) -> Iterable:
         return super().__call__(environ, start_response)
 
     @debug
