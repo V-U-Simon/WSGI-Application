@@ -2,11 +2,22 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="{{ static }}css/style.css">
-    {% include 'css_style.html' %}
+    <script src="{{ static }}js/jquery.min.js"></script>
+    <script src="{{ static }}js/jquery.dropotron.min.js"></script>
+    <script src="{{ static }}js/jquery.scrollgress.min.js"></script>
+    <script src="{{ static }}js/jquery.scrolly.min.js"></script>
+    <script src="{{ static }}js/jquery.slidertron.min.js"></script>
+    <script src="{{ static }}js/skel.min.js"></script>
+    <script src="{{ static }}js/skel-layers.min.js"></script>
+    <script src="{{ static }}js/init.js"></script>
+    <noscript>
+      <link rel="stylesheet" href="{{ static }}css/skel.css" />
+      <link rel="stylesheet" href="{{ static }}css/style.css" />
+      <link rel="stylesheet" href="{{ static }}css/style-xlarge.css" />
+    </noscript>
     <title>Школа программирования</title>
   </head>
-  <body>
+  <body class="landing">
     {% include 'navigation.html' %}
     {% block body %}
     {% endblock body %}
