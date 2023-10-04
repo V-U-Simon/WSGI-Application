@@ -1,12 +1,12 @@
 from ast import List
 from framework_wsgi.urls import Url
-import views_main
-import views_categories
-import views_courses
-import views_static
-import views_students
-import views_teachers
-import views_courses_students
+from views import views_main
+from views import views_categories
+from views import views_courses
+from views import views_static
+from views import views_students
+from views import views_teachers
+from views import views_courses_students
 
 
 # Pattern: front_controllers
@@ -56,6 +56,6 @@ class Router:
         self.__urlpatterns.append(Url(self.__url, cls))
 
 
-# выполнение Router (добавление дополенительного пути в urls)
-# так же избегание циклического импорта
-import views_other
+# # выполнение Router (добавление дополенительного пути в urls)
+# # так же избегание циклического импорта
+# from views import views_other

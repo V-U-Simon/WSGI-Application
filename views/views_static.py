@@ -18,7 +18,7 @@ class StaticProcessor(View):
         static_dir = request.settings.STATIC_DIR_NAME
         static_file = request.environ.get("PATH_INFO").replace("/static/", "")
         static_file = static_file.split("/")
-        root_path = os.path.dirname(__file__)
+        root_path = request.settings.BASE_DIR
 
         file_name = Path(root_path) / static_dir
         for file in static_file:
