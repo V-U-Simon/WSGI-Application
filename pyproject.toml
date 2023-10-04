@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["V-U-Simon <V-U-Simon@yandex.ru>"]
 readme = "README.md"
-packages = [{include = "architecture_and_patterns"}]
+packages = []
 
 [tool.poetry.dependencies]
 python = "^3.11"
