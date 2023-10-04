@@ -21,13 +21,14 @@ class CookieMiddleWare(BaseMiddleWare):
             "session",
         ]
 
-        for item in cookie_str.split(";"):
-            key, value = item.strip().split("=", 1)
+        if cookie_str:
+            for item in cookie_str.split(";"):
+                key, value = item.strip().split("=", 1)
 
-            if key not in exempt_keys:
-                request.cookies[key] = value  # Не применяем unquote
-            else:
-                request.cookies[key] = unquote(value)  # Применяем unquote
+                if key not in exempt_keys:
+                    request.cookies[key] = value  # Не применяем unquote
+                else:
+                    request.cookies[key] = unquote(value)  # Применяем unquote
 
     def process_response(self, response: Response):
         cookies_to_set = "; ".join(
