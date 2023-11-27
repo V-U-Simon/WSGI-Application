@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Delete Confirmation{% endblock %}
+{% block body %}
+    <section id="main" class="wrapper style1">
+        <header class="major">
+            <h2>Delete Confirmation</h2>
+        </header>
+        <div class="container">
+            <!-- Content -->
+            <section id="content">
+                <p>Are you sure you want to delete {{ object.name }}?</p>
+                <form method="POST" action="/teachers/{{ object.id }}/delete/">
+                    <ul class="actions">
+                        <li>
+                            <input type="submit" value="Delete" class="special" />
+                        </li>
+                        <li>
+                            <a href="/teachers/{{ object.id }}/">Cancel</a>
+                        </li>
+                    </ul>
+                </form>
+            </section>
+        </div>
+    </section>
+{% endblock body %}

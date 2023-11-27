@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Category{% endblock %}
+{% block body %}
+    <section id="main" class="wrapper style1">
+        {% if object %}
+            <header class="major">
+                <h2>Category: {{ object.name }}</h2>
+            </header>
+            <div class="container">
+                <!-- Content -->
+                <section id="content">
+                    <p>Some information about the category:</p>
+                    <div class="row">
+                        <div class="6u 12u(2)">
+                            <ul>
+                                <li>
+                                    <strong>Category id</strong>: {{ object.id }}
+                                </li>
+                                <li>
+                                    <strong>Category name</strong>: {{ object.name }}
+                                </li>
+                                <li>
+                                    <strong>Parent id</strong>: {{ object.parent_id }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <ul class="actions fit small">
+                        <li>
+                            <a href="/categories/{{ object.id }}/update/" class="button fit small">update</a>
+                        </li>
+                        <li>
+                            <a href="/categories/{{ object.id }}/delete/" class="button fit small">delete</a>
+                        </li>
+                        <li>
+                            <a href="/categories/">back to category list</a>
+                        </li>
+                    </ul>
+                    <!-- Table -->
+                </section>
+            </div>
+        {% else %}
+            <header class="major">
+                <h2>Category: Not Found</h2>
+            </header>
+        {% endif %}
+    </section>
+{% endblock body %}

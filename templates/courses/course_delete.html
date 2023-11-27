@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Подтверждение удаления{% endblock %}
+{% block body %}
+    <section id="main" class="wrapper style1">
+        <header class="major">
+            <h2>Подтверждение удаления</h2>
+        </header>
+        <div class="container">
+            <!-- Content -->
+            <section id="content">
+                <p>Вы уверены, что хотите удалить {{ object.name }}?</p>
+                <form method="POST" action="/courses/{{ object.id }}/delete/">
+                    <ul class="actions">
+                        <li>
+                            <input type="submit" value="Удалить" class="special" />
+                        </li>
+                        <li>
+                            <a href="/courses/{{ object.id }}/">Отменить</a>
+                        </li>
+                    </ul>
+                </form>
+            </section>
+        </div>
+    </section>
+{% endblock body %}

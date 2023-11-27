@@ -1,7 +1,7 @@
 {
   // 📁 PYTHONPATH
   "terminal.integrated.env.osx": {
-    "PYTHONPATH": "/Users/macbook/Code/Projects/architecture_patterns - project/.venv/lib/python3.11/site-packages:${workspaceFolder}/lesson_04"
+    "PYTHONPATH": "/Users/macbook/Code/Projects/architecture_patterns - project/.venv/lib/python3.11/site-packages:${workspaceFolder}/"
   },
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"

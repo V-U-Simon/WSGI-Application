@@ -1,0 +1,21 @@
+<form method="POST" action="/courses/{{ object.id }}/add_student/">
+    <div class="row uniform">
+        <div class="6u 12u(3)">
+            <ul class ="actions">
+                <li>
+                    <select id="student_id" name="student_id">
+                        {% for student in students_not_on_course %}
+                            <option value="{{ student.id }}">(id: {{ student.id }}) {{ student.name }}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li>
+                    <input class="special "
+                           type="submit"
+                           {% if not students_not_on_course %}disabled{% endif %}
+                           value="Add Student to Course" />
+                </li>
+            </ul>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}
+    {% if form.id %}
+        Update Category
+    {% else %}
+        Create a New Category
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <section id="main" class="wrapper style1">
+        <header class="major">
+            <h2>
+                {% if form.id %}
+                    Update Category
+                {% else %}
+                    Create a New Category
+                {% endif %}
+            </h2>
+        </header>
+        <div class="container">
+            <!-- Content -->
+            <section id="content">
+                <!-- Form -->
+                <form method="POST"
+                      {% if form.id %}action="/categories/{{ form.id }}/update/"{% else %}action="/categories/create/"{% endif %}>
+                    <div class="row uniform">
+                        <div class="6u 12u(3)">
+                            <input type="text"
+                                   id="name"
+                                   placeholder="Name"
+                                   name="name"
+                                   value="{{ form.name if form else '' }}">
+                        </div>
+                    </div>
+                    <div class="row uniform">
+                        <div class="6u 12u(3)">
+                            <div class="select-wrapper">
+                                <label for="category_id">Parent category:</label>
+                                <select name="parent_id" id="parent_id">
+                                    <option value="">Without parent category</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}"
+                                                {% if form and category.id == form.parent_id %}selected{% endif %}>
+                                            {{ category.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row uniform">
+                        {% if excpt %}{{ excpt }}{% endif %}
+                    </div>
+                    <div class="row uniform">
+                        <div class="12u">
+                            <ul class="actions">
+                                <li>
+                                    <input type="submit" value="Submit" />
+                                </li>
+                                <li>
+                                    <a href="/categories/">Back to categories list</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
+{% endblock body %}
