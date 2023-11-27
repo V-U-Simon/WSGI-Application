@@ -1,20 +1,17 @@
 # **Emample of** WSGI Framework
 
-It is a self-made "bicycle" with "crutches" instead of wheels.
+This is a self-made "bicycle" or wheel which is a self-written analog of the Django framework.
 The main purpose of creation is to apply, as well as to experience the use of programming patterns.
 
-## How to run the application
+## Quick start
 
-For starting progect you should do next steps.
+For starting progect you should clone project to your folder. And after this execute the following command:
 
 ```bash
-# clone project to your folder:
-git clone git@github.com:V-U-Simon/Web_application.git .
-
-# be sure that you have running docker engine
-# and run containe:
-make run
+make run # under hood run container
 ```
+
+![example](example.gif)
 
 ## List of tasks for this project
 
